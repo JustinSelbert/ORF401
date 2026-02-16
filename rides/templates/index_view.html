@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="search-panel">
+  <form action="{% url 'rides:index' %}" method="get" class="search-form">
+    <label for="{{ form.search.id_for_label }}">Search rides</label>
+    {{ form.search }}
+    <button type="submit">Search</button>
+  </form>
+</section>
+
+<section class="results-panel">
+  {% if people is None %}
+    <p class="empty-state">Enter a name or city to search ride listings.</p>
+  {% elif people %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Origination</th>
+            <th>Destination</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Taking Passengers</th>
+            <th>Seats Available</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for person in people %}
+          <tr>
+            <td>{{ person.first_name }}</td>
+            <td>{{ person.origination }}</td>
+            <td>{{ person.destination_city }}, {{ person.destination_state }}</td>
+            <td>{{ person.date }}</td>
+            <td>{{ person.time }}</td>
+            <td>{{ person.taking_passengers|yesno:"Yes,No" }}</td>
+            <td>{{ person.seats_available }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="empty-state">No rides matched your search.</p>
+  {% endif %}
+</section>
+{% endblock %}

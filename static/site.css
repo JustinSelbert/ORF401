@@ -1,0 +1,135 @@
+:root {
+  --bg: #f3f5f7;
+  --panel: #ffffff;
+  --text: #17212b;
+  --muted: #5a6673;
+  --accent: #0f6db0;
+  --accent-strong: #0a4f80;
+  --line: #d7dde3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #eef3f8 0%, var(--bg) 100%);
+}
+
+.page-shell {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 2rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.site-logo {
+  width: 68px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.site-header p {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+}
+
+.search-panel,
+.results-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 8px 20px rgba(15, 32, 53, 0.06);
+}
+
+.results-panel {
+  margin-top: 1rem;
+}
+
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: end;
+}
+
+.search-form label {
+  width: 100%;
+  font-weight: 600;
+}
+
+.search-form input[type="text"] {
+  flex: 1 1 300px;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.5rem 0.65rem;
+  font-size: 1rem;
+}
+
+.search-form button {
+  min-height: 40px;
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-form button:hover {
+  background: var(--accent-strong);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.65rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+th {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.empty-state {
+  margin: 0.1rem 0;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .site-header {
+    align-items: flex-start;
+  }
+}

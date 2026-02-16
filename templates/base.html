@@ -1,0 +1,27 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HandyRides</title>
+    <link rel="stylesheet" href="{% static 'site.css' %}">
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <img class="site-logo" src="{% static 'logo.jpg' %}" alt="HandyRides logo">
+        <div>
+          <h1>HandyRides</h1>
+          <p>Find ride options by name or origination city.</p>
+        </div>
+      </header>
+
+      <main>
+        {% block content %}
+        {% endblock %}
+      </main>
+    </div>
+  </body>
+</html>
