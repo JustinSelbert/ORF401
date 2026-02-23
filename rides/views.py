@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 
 from .models import Person
 
@@ -15,9 +16,28 @@ def index(request):
 
   if "search" in request.GET:
     search = request.GET["search"].strip()
-    context["people"] = (
-      Person.objects.filter(first_name=search)
-      | Person.objects.filter(origination__icontains=search)
-    )
+
+    if search:
+      terms = search.replace(",", " ").split()
+      query = Q()
+
+      for term in terms:
+        term_query = (
+          Q(first_name__icontains=term)
+          | Q(origination__icontains=term)
+          | Q(destination_city__icontains=term)
+        )
+
+        # Treat 2-character tokens as potential state abbreviations.
+        if len(term) == 2:
+          term_query = term_query | Q(destination_state__iexact=term)
+        else:
+          term_query = term_query | Q(destination_state__icontains=term)
+
+        query &= term_query
+
+      context["people"] = Person.objects.filter(query)
+    else:
+      context["people"] = Person.objects.none()
 
   return render(request, "index_view.html", context)

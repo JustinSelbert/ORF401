@@ -6,5 +6,5 @@ class RideForm(forms.Form):
     label='Search',
     max_length=64,
     required=False,
-    widget=forms.TextInput(attrs={"placeholder": "e.g. Zach or Princeton"})
+    widget=forms.TextInput(attrs={"placeholder": "e.g. Austin, Dallas, or TX"})
   )

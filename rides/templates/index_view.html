@@ -2,14 +2,25 @@
 
 {% block content %}
 <section class="search-panel">
-  <form action="{% url 'rides:index' %}" method="get" class="search-form">
+  <p class="eyebrow">Ride Search</p>
+  <h2 class="panel-title">Find your best SparkRides match</h2>
+  <p class="panel-subtitle">Search by rider, origin, destination, or state abbreviation and discover carpools with aligned interests.</p>
+  <form action="{% url 'rides:index' %}" method="get" class="search-form" onsubmit="return checkForm();">
     <label for="{{ form.search.id_for_label }}">Search rides</label>
     {{ form.search }}
-    <button type="submit">Search</button>
+    <button type="submit">Search Rides</button>
   </form>
+  <div class="hint-row" aria-hidden="true">
+    <span class="hint-chip">Austin Dallas</span>
+    <span class="hint-chip">Seattle WA</span>
+    <span class="hint-chip">Spotify + Miami</span>
+  </div>
 </section>
 
 <section class="results-panel">
+  <div class="results-head">
+    <h3>Results</h3>
+  </div>
   {% if people is None %}
     <p class="empty-state">Enter a name or city to search ride listings.</p>
   {% elif people %}
@@ -29,12 +40,18 @@
         <tbody>
           {% for person in people %}
           <tr>
-            <td>{{ person.first_name }}</td>
+            <td><strong>{{ person.first_name }}</strong></td>
             <td>{{ person.origination }}</td>
             <td>{{ person.destination_city }}, {{ person.destination_state }}</td>
             <td>{{ person.date }}</td>
             <td>{{ person.time }}</td>
-            <td>{{ person.taking_passengers|yesno:"Yes,No" }}</td>
+            <td>
+              {% if person.taking_passengers %}
+                <span class="pill pill-yes">Yes</span>
+              {% else %}
+                <span class="pill pill-no">No</span>
+              {% endif %}
+            </td>
             <td>{{ person.seats_available }}</td>
           </tr>
           {% endfor %}

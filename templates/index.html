@@ -1,13 +1,115 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="search-panel" style="text-align: center;">
-  <h2>Welcome to HandyRides</h2>
-  <p class="empty-state">Find fast, reliable rides in just a few clicks.</p>
-  <p>
-    <a href="/rides" style="display: inline-block; padding: 0.55rem 1rem; border-radius: 10px; background: var(--accent); color: #fff; font-weight: 600; text-decoration: none;">
-      Search for a Ride
-    </a>
-  </p>
+<section class="hero-panel">
+  <div class="hero-content">
+    <p class="eyebrow">SparkRides Matchmaking</p>
+    <h1 class="hero-title">Find carpools with people who share your vibe.</h1>
+    <p class="hero-copy">
+      SparkRides prioritizes ride-share matchmaking so you can carpool with riders of similar interests, not just similar routes.
+    </p>
+    <div class="hero-cta-row">
+      <a class="cta-link" href="/rides">Find a Ride</a>
+      <a class="secondary-link" href="/rides">Explore Matches</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <article class="stat-card">
+      <p class="stat-value">98%</p>
+      <p class="stat-label">on-time departures</p>
+    </article>
+    <article class="stat-card">
+      <p class="stat-value">1.8k+</p>
+      <p class="stat-label">monthly searches</p>
+    </article>
+    <article class="stat-card">
+      <p class="stat-value">24/7</p>
+      <p class="stat-label">self-serve matching</p>
+    </article>
+  </div>
+</section>
+
+<section class="feature-grid">
+  <article class="feature-card">
+    <h3>Demographic Matching</h3>
+    <p>Prioritize compatible carpool matches based on shared interests and rider profile signals.</p>
+  </article>
+  <article class="feature-card">
+    <h3>Social Integrations</h3>
+    <p>Connect Spotify, Instagram, Facebook, and other platforms to improve match quality.</p>
+  </article>
+  <article class="feature-card">
+    <h3>Smarter Carpools</h3>
+    <p>Find rides that align on both destination and rider compatibility for better shared trips.</p>
+  </article>
+</section>
+
+<section class="partner-section">
+  <div class="section-heading">
+    <p class="eyebrow">Connected Platforms</p>
+    <h2>Pictures of our social media partners.</h2>
+    <p>
+      SparkRides blends route data with social signals so riders can connect with compatible people before they ever step into the car.
+    </p>
+  </div>
+  <div class="partner-grid">
+    <article class="partner-card">
+      <img src="/static/partners/spotify.svg" alt="Spotify partner logo">
+      <h3>Spotify</h3>
+      <p>Match riders with similar music tastes to improve in-car compatibility.</p>
+    </article>
+    <article class="partner-card">
+      <img src="/static/partners/instagram.svg" alt="Instagram partner logo">
+      <h3>Instagram</h3>
+      <p>Optional shared interests and lifestyle tags support better ride pairings.</p>
+    </article>
+    <article class="partner-card">
+      <img src="/static/partners/facebook.svg" alt="Facebook partner logo">
+      <h3>Facebook</h3>
+      <p>Use profile context to support demographic and community-aware matching.</p>
+    </article>
+    <article class="partner-card">
+      <img src="/static/partners/youtube.svg" alt="YouTube partner logo">
+      <h3>More Platforms</h3>
+      <p>Expandable integration layer for additional social and media ecosystems.</p>
+    </article>
+  </div>
+</section>
+
+<section class="map-section">
+  <div class="map-card">
+    <img src="/static/maps/spark-city-map.svg" alt="Stylized SparkRides city map with route paths">
+  </div>
+  <div class="map-copy">
+    <p class="eyebrow">Cool Map Aesthetics</p>
+    <h2>Visual route intelligence made for modern ride-sharing.</h2>
+    <p>
+      Our mapping layer highlights route corridors, pickup density, and rider-interest overlap so each carpool can feel smooth and social.
+    </p>
+    <ul class="map-list">
+      <li>Heat-style lane visuals for high-demand corridors</li>
+      <li>Pickup cluster indicators for easier trip planning</li>
+      <li>Compatibility overlays tied to interest-based matching</li>
+    </ul>
+  </div>
+</section>
+
+<section class="info-grid">
+  <article class="info-card">
+    <p class="info-step">01</p>
+    <h3>Search Routes</h3>
+    <p>Enter your origin, destination, city, or state abbreviation to find options fast.</p>
+  </article>
+  <article class="info-card">
+    <p class="info-step">02</p>
+    <h3>Check Match Quality</h3>
+    <p>See compatibility-driven suggestions using shared demographics and interests.</p>
+  </article>
+  <article class="info-card">
+    <p class="info-step">03</p>
+    <h3>Ride Together</h3>
+    <p>Book with confidence knowing your route and rider profile are both a fit.</p>
+  </article>
 </section>
 {% endblock %}
