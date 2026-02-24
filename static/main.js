@@ -1,70 +1,169 @@
-function getCookie(c_name) {
-    var i,x,y,ARRcookies=document.cookie.split(";");
-    for (i=0;i<ARRcookies.length;i++) {
-        x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-        y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-        x=x.replace(/^\s+|\s+$/g,"");
-        if (x==c_name) {
-            return unescape(y);
-        }
-    }
-}
-
-function setCookie(c_name,value,exdays) {
-    var exdate=new Date();
-    exdate.setDate(exdate.getDate() + exdays);
-    var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
-    document.cookie=c_name + "=" + c_value;
-}
-
 function checkForm() {
-    var form = document.querySelector(".search-form");
-    if (!form) {
-        return true;
-    }
-
-    var textInputs = form.querySelectorAll("input[type='text']");
-    var hasValue = false;
-    var combined = [];
-    var i;
-
-    for (i = 0; i < textInputs.length; i++) {
-        var value = textInputs[i].value.trim();
-        combined.push(value);
-        if (value !== "") {
-            hasValue = true;
-        }
-    }
-
-    if (!hasValue) {
-        return false;
-    }
-
-    if (combined.join(" ").replace(/\s+/g, " ").trim().toLowerCase() === "elon musk") {
-        alert("");
-    }
-
+  var form = document.querySelector(".search-form");
+  if (!form) {
     return true;
+  }
+
+  var searchField = form.querySelector("input[name='search']");
+  var dateField = form.querySelector("input[name='travel_date']");
+  var seatsField = form.querySelector("input[name='minimum_seats']");
+  var passengersField = form.querySelector("input[name='passengers_only']");
+
+  var hasSearch = searchField && searchField.value.trim() !== "";
+  var hasDate = dateField && dateField.value.trim() !== "";
+  var hasSeats = seatsField && seatsField.value.trim() !== "";
+  var hasPassengersOnly = passengersField && passengersField.checked;
+
+  return hasSearch || hasDate || hasSeats || hasPassengersOnly;
 }
 
-function handleFirstVisit() {
-    var visitCookieName = "sparkrides_visited";
-    var hasVisited = getCookie(visitCookieName);
-    var path = window.location.pathname.replace(/\/+$/, "");
+function initSearchHints() {
+  var hintButtons = document.querySelectorAll("[data-search-hint]");
+  if (!hintButtons.length) {
+    return;
+  }
 
-    if (path === "") {
-        path = "/";
-    }
+  var searchField = document.querySelector(".search-form input[name='search']");
+  if (!searchField) {
+    return;
+  }
 
-    if (!hasVisited) {
-        setCookie(visitCookieName, "1", 30);
+  hintButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      searchField.value = button.getAttribute("data-search-hint") || "";
+      searchField.focus();
+    });
+  });
+}
 
-        // First visit on a non-splash page should be sent to the splash page.
-        if (path !== "/") {
-            window.location.href = "/";
-            return;
+function initFaqAccordion() {
+  var faqContainer = document.querySelector("[data-faq-list]");
+  if (!faqContainer) {
+    return;
+  }
+
+  var items = faqContainer.querySelectorAll("details");
+  items.forEach(function (item) {
+    item.addEventListener("toggle", function () {
+      if (!item.open) {
+        return;
+      }
+
+      items.forEach(function (otherItem) {
+        if (otherItem !== item) {
+          otherItem.open = false;
         }
-    }
+      });
+    });
+  });
 }
 
-document.addEventListener("DOMContentLoaded", handleFirstVisit);
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function readMapRides() {
+  var script = document.getElementById("map-rides-data");
+  if (!script) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(script.textContent);
+  } catch (error) {
+    return [];
+  }
+}
+
+function renderRidePopup(ride) {
+  return [
+    "<strong>",
+    escapeHtml(ride.first_name),
+    "</strong><br>",
+    escapeHtml(ride.origination),
+    " to ",
+    escapeHtml(ride.destination_city),
+    ", ",
+    escapeHtml(ride.destination_state),
+    "<br>",
+    "Departure: ",
+    escapeHtml(ride.date),
+    " ",
+    escapeHtml(ride.time),
+    "<br>",
+    "Open seats: ",
+    escapeHtml(ride.seats_available),
+  ].join("");
+}
+
+function initRideMap() {
+  var mapElement = document.getElementById("rides-map");
+  if (!mapElement || typeof window.L === "undefined") {
+    return;
+  }
+
+  var rides = readMapRides();
+  var map = window.L.map(mapElement, { scrollWheelZoom: true });
+
+  window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  if (!rides.length) {
+    map.setView([39.8283, -98.5795], 4);
+    return;
+  }
+
+  var bounds = [];
+
+  rides.forEach(function (ride) {
+    var origin = [ride.origin_lat, ride.origin_lng];
+    var destination = [ride.destination_lat, ride.destination_lng];
+    var popup = renderRidePopup(ride);
+
+    window.L.polyline([origin, destination], {
+      color: "#2f6fff",
+      weight: 3,
+      opacity: 0.75,
+    })
+      .addTo(map)
+      .bindPopup(popup);
+
+    window.L.circleMarker(origin, {
+      radius: 6,
+      color: "#0b3d2f",
+      weight: 1,
+      fillColor: "#17b890",
+      fillOpacity: 0.95,
+    })
+      .addTo(map)
+      .bindPopup("<strong>Origin</strong><br>" + popup);
+
+    window.L.circleMarker(destination, {
+      radius: 6,
+      color: "#730052",
+      weight: 1,
+      fillColor: "#ff00bf",
+      fillOpacity: 0.95,
+    })
+      .addTo(map)
+      .bindPopup("<strong>Destination</strong><br>" + popup);
+
+    bounds.push(origin);
+    bounds.push(destination);
+  });
+
+  map.fitBounds(bounds, { padding: [24, 24] });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  initSearchHints();
+  initFaqAccordion();
+  initRideMap();
+});

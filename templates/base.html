@@ -6,26 +6,32 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SparkRides</title>
-    <script src="{% static 'main.js' %}"></script>
+    {% block extra_head %}{% endblock %}
     <link rel="stylesheet" href="{% static 'main.css' %}">
     <link rel="stylesheet" href="{% static 'site.css' %}">
+    <script src="{% static 'main.js' %}" defer></script>
   </head>
   <body>
     <div class="bg-glow glow-left" aria-hidden="true"></div>
     <div class="bg-glow glow-right" aria-hidden="true"></div>
+
     <div class="page-shell">
       <header class="site-header">
-        <a class="brand" href="/">
+        <a class="brand" href="{% url 'rides:home' %}">
           <img class="site-logo" src="{% static 'sparkrides_spark.png' %}" alt="SparkRides logo">
           <div class="brand-copy">
             <span class="brand-name">SparkRides</span>
-            <span class="brand-tag">Interest-based carpool matching for better rides.</span>
+            <span class="brand-tag">Carpool matching for routes, interests, and ride vibe.</span>
           </div>
         </a>
+
         <nav class="header-actions" aria-label="Primary">
-          <a class="ghost-link" href="/">Home</a>
-          <a class="ghost-link" href="/rides">Search</a>
-          <a class="primary-link" href="/rides">Book a Ride</a>
+          <a class="ghost-link {% if nav_page == 'home' %}is-active{% endif %}" href="{% url 'rides:home' %}">Home</a>
+          <a class="ghost-link {% if nav_page == 'search' %}is-active{% endif %}" href="{% url 'rides:index' %}">Find Ride</a>
+          <a class="ghost-link {% if nav_page == 'map' %}is-active{% endif %}" href="{% url 'rides:map' %}">Map</a>
+          <a class="ghost-link {% if nav_page == 'profile' %}is-active{% endif %}" href="{% url 'rides:profile' %}">Profile</a>
+          <a class="ghost-link {% if nav_page == 'faq' %}is-active{% endif %}" href="{% url 'rides:faq' %}">FAQ</a>
+          <a class="primary-link {% if nav_page == 'signin' %}is-active{% endif %}" href="{% url 'rides:sign_in' %}">Sign In</a>
         </nav>
       </header>
 
@@ -34,5 +40,6 @@
         {% endblock %}
       </main>
     </div>
+    {% block extra_scripts %}{% endblock %}
   </body>
 </html>

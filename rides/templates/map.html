@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+  defer
+></script>
+{% endblock %}
+
+{% block content %}
+<section class="page-intro">
+  <p class="eyebrow">Map Intelligence</p>
+  <h1 class="panel-title">Live map of all available rides</h1>
+  <p class="panel-subtitle">
+    This map uses OpenStreetMap tiles through Leaflet and plots every available ride with origin and destination markers.
+  </p>
+</section>
+
+<section class="map-section map-page-section">
+  <div class="map-card">
+    <div id="rides-map" class="map-canvas" aria-label="SparkRides live ride map"></div>
+    <div class="map-legend" aria-hidden="true">
+      <span><i class="legend-dot legend-origin"></i> Origin</span>
+      <span><i class="legend-dot legend-destination"></i> Destination</span>
+      <span><i class="legend-line"></i> Ride path</span>
+    </div>
+  </div>
+  <div class="map-copy">
+    <p class="eyebrow">Network Snapshot</p>
+    <h2>{{ network_rides }} available rides with {{ network_seats }} open seats.</h2>
+    <p>
+      {{ plotted_ride_count }} rides are currently plotted on the live map.
+      {% if unresolved_ride_count %}
+        {{ unresolved_ride_count }} rides could not be geolocated and are not shown.
+      {% endif %}
+    </p>
+    <ul class="map-list">
+      <li>Click a marker or route line to view rider details.</li>
+      <li>Blue routes represent active available ride paths.</li>
+      <li>Use this to quickly identify carpools near your corridor.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="split-panel">
+  <article class="split-card">
+    <h3>Mapped Available Rides</h3>
+    <div class="mini-list">
+      {% for ride in available_rides %}
+      <div class="mini-item">
+        <div>
+          <strong>{{ ride.first_name }}</strong>
+          <p>{{ ride.origination }} to {{ ride.destination_city }}, {{ ride.destination_state }}</p>
+          <p>{{ ride.date }} at {{ ride.time }}</p>
+        </div>
+        <span class="pill pill-yes">{{ ride.seats_available }} seats</span>
+      </div>
+      {% empty %}
+      <p class="empty-state">No available rides to display on the map.</p>
+      {% endfor %}
+    </div>
+  </article>
+
+  <article class="split-card">
+    <h3>Top Corridors</h3>
+    <div class="mini-list">
+      {% for corridor in corridor_cards %}
+      <div class="mini-item">
+        <div>
+          <strong>{{ corridor.route }}</strong>
+          <p>{{ corridor.rides }} rides, {{ corridor.open_seats }} open seats, {{ corridor.active_drivers }} active drivers</p>
+        </div>
+        <span class="pill {% if corridor.load == 'High demand' %}pill-yes{% endif %}">{{ corridor.load }}</span>
+      </div>
+      {% empty %}
+      <p class="empty-state">No corridor data available yet.</p>
+      {% endfor %}
+    </div>
+  </article>
+</section>
+
+<section class="split-panel">
+  <article class="split-card">
+    <h3>Pickup Hotspots</h3>
+    <div class="destination-list">
+      {% for spot in pickup_hotspots %}
+      <div class="destination-row">
+        <span>{{ spot.origination }}</span>
+        <strong>{{ spot.total }} rides</strong>
+      </div>
+      {% empty %}
+      <p class="empty-state">No pickup activity found.</p>
+      {% endfor %}
+    </div>
+    <a class="inline-link" href="{% url 'rides:index' %}">Find rides on these corridors</a>
+  </article>
+
+  <article class="split-card">
+    <h3>How To Use This Map</h3>
+    <div class="destination-list">
+      <div class="destination-row"><span>1. Open route details</span><strong>Click marker</strong></div>
+      <div class="destination-row"><span>2. Compare seat supply</span><strong>Check popups</strong></div>
+      <div class="destination-row"><span>3. Book your match</span><strong>Go to Find Ride</strong></div>
+    </div>
+  </article>
+</section>
+
+{{ map_rides|json_script:"map-rides-data" }}
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-intro">
+  <p class="eyebrow">Account</p>
+  <h1 class="panel-title">Sign in or create your SparkRides account</h1>
+  <p class="panel-subtitle">
+    Manage carpool preferences, connect social platforms, and unlock better compatibility recommendations.
+  </p>
+</section>
+
+<section class="split-panel auth-panel">
+  <article class="split-card {% if active_panel == 'login' %}is-active-panel{% endif %}">
+    <h3>Welcome Back</h3>
+    <p class="card-subtitle">Sign in to continue booking and managing rides.</p>
+
+    {% if login_success %}
+    <p class="notice-success">Sign-in details accepted. Authentication wiring can be connected next.</p>
+    {% endif %}
+
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="login">
+      <div class="form-row">
+        <label for="{{ login_form.email.id_for_label }}">Email</label>
+        {{ login_form.email }}
+      </div>
+      <div class="form-row">
+        <label for="{{ login_form.password.id_for_label }}">Password</label>
+        {{ login_form.password }}
+      </div>
+      <div class="form-row checkbox-row">
+        <label for="{{ login_form.remember_me.id_for_label }}">{{ login_form.remember_me }} {{ login_form.remember_me.label }}</label>
+      </div>
+      <button type="submit">Sign In</button>
+    </form>
+  </article>
+
+  <article class="split-card {% if active_panel == 'register' %}is-active-panel{% endif %}">
+    <h3>Create Account</h3>
+    <p class="card-subtitle">Set up your rider profile and start discovering social-first carpools.</p>
+
+    {% if register_success %}
+    <p class="notice-success">Account details received. Connect this form to user creation when ready.</p>
+    {% endif %}
+
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="register">
+      <div class="form-row">
+        <label for="{{ register_form.first_name.id_for_label }}">First name</label>
+        {{ register_form.first_name }}
+      </div>
+      <div class="form-row">
+        <label for="{{ register_form.email.id_for_label }}">Email</label>
+        {{ register_form.email }}
+      </div>
+      <div class="form-row">
+        <label for="{{ register_form.home_city.id_for_label }}">Home city</label>
+        {{ register_form.home_city }}
+      </div>
+      <div class="form-row">
+        <label for="{{ register_form.password.id_for_label }}">Password</label>
+        {{ register_form.password }}
+      </div>
+      <div class="form-row checkbox-row">
+        <label for="{{ register_form.marketing_opt_in.id_for_label }}">{{ register_form.marketing_opt_in }} {{ register_form.marketing_opt_in.label }}</label>
+      </div>
+      <button type="submit">Create Account</button>
+    </form>
+  </article>
+</section>
+
+<section class="feature-grid">
+  <article class="feature-card">
+    <h3>Profile Controls</h3>
+    <p>Set route defaults, accessibility needs, and ride comfort preferences in one place.</p>
+  </article>
+  <article class="feature-card">
+    <h3>Connected Integrations</h3>
+    <p>Link optional social platforms to improve rider matchmaking quality.</p>
+  </article>
+  <article class="feature-card">
+    <h3>Faster Booking</h3>
+    <p>Save frequent trips and rider preferences for one-click ride discovery.</p>
+  </article>
+</section>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="profile-hero">
+  <div>
+    <p class="eyebrow">Rider Profile</p>
+    <h1 class="panel-title">{{ profile_name }}</h1>
+    <p class="panel-subtitle">{{ profile_tier }} member in {{ profile_city }} with a {{ profile_score }} rider rating.</p>
+  </div>
+  <div class="profile-badges">
+    <span class="pill pill-yes">Identity Verified</span>
+    <span class="pill pill-yes">Payment Ready</span>
+    <span class="pill">Carpool Priority</span>
+  </div>
+</section>
+
+<section class="split-panel">
+  <article class="split-card">
+    <h3>Linked Platforms</h3>
+    <div class="mini-list">
+      {% for account in linked_accounts %}
+      <div class="mini-item">
+        <div>
+          <strong>{{ account.name }}</strong>
+          <p>{{ account.detail }}</p>
+        </div>
+        {% if account.status == 'Connected' %}
+        <span class="pill pill-yes">Connected</span>
+        {% else %}
+        <span class="pill pill-no">Not linked</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+
+  <article class="split-card">
+    <h3>Upcoming Open Rides</h3>
+    <div class="mini-list">
+      {% for ride in upcoming_rides %}
+      <div class="mini-item">
+        <div>
+          <strong>{{ ride.origination }} to {{ ride.destination_city }}</strong>
+          <p>{{ ride.date }} at {{ ride.time }}</p>
+        </div>
+        <span class="pill pill-yes">{{ ride.seats_available }} seats</span>
+      </div>
+      {% empty %}
+      <p class="empty-state">No upcoming rides to display.</p>
+      {% endfor %}
+    </div>
+  </article>
+</section>
+
+<section class="results-panel">
+  <div class="results-head">
+    <h3>Match Preferences</h3>
+  </div>
+
+  {% if preferences_saved %}
+  <p class="notice-success">Preferences captured. Connect this to persistence when you are ready.</p>
+  {% endif %}
+
+  <form method="post" class="stack-form">
+    {% csrf_token %}
+    <div class="form-row">
+      <label for="{{ preferences_form.music_focus.id_for_label }}">{{ preferences_form.music_focus.label }}</label>
+      {{ preferences_form.music_focus }}
+    </div>
+
+    <div class="form-row two-column-form">
+      <div>
+        <label for="{{ preferences_form.conversation_style.id_for_label }}">{{ preferences_form.conversation_style.label }}</label>
+        {{ preferences_form.conversation_style }}
+      </div>
+      <div>
+        <label for="{{ preferences_form.climate_preference.id_for_label }}">{{ preferences_form.climate_preference.label }}</label>
+        {{ preferences_form.climate_preference }}
+      </div>
+    </div>
+
+    <div class="form-row checkbox-row">
+      <label for="{{ preferences_form.pet_friendly.id_for_label }}">{{ preferences_form.pet_friendly }} {{ preferences_form.pet_friendly.label }}</label>
+    </div>
+    <div class="form-row checkbox-row">
+      <label for="{{ preferences_form.women_only_opt_in.id_for_label }}">{{ preferences_form.women_only_opt_in }} {{ preferences_form.women_only_opt_in.label }}</label>
+    </div>
+
+    <button type="submit">Save Preferences</button>
+  </form>
+</section>
+{% endblock %}

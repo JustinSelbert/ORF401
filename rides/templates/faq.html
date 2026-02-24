@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-intro">
+  <p class="eyebrow">Support</p>
+  <h1 class="panel-title">Frequently asked questions</h1>
+  <p class="panel-subtitle">
+    Learn how SparkRides compatibility matching, rider preferences, safety, and credits work.
+  </p>
+</section>
+
+<section class="split-panel">
+  <article class="split-card faq-card">
+    <h3>Common Questions</h3>
+    <div class="faq-list" data-faq-list>
+      {% for item in faqs %}
+      <details class="faq-item" {% if forloop.first %}open{% endif %}>
+        <summary>{{ item.question }}</summary>
+        <p>{{ item.answer }}</p>
+      </details>
+      {% endfor %}
+    </div>
+  </article>
+
+  <article class="split-card">
+    <h3>Contact Support</h3>
+
+    {% if support_sent %}
+    <p class="notice-success">Support request submitted. Connect this to your ticketing system when ready.</p>
+    {% endif %}
+
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      <div class="form-row">
+        <label for="{{ support_form.topic.id_for_label }}">{{ support_form.topic.label }}</label>
+        {{ support_form.topic }}
+      </div>
+      <div class="form-row">
+        <label for="{{ support_form.email.id_for_label }}">{{ support_form.email.label }}</label>
+        {{ support_form.email }}
+      </div>
+      <div class="form-row">
+        <label for="{{ support_form.message.id_for_label }}">{{ support_form.message.label }}</label>
+        {{ support_form.message }}
+      </div>
+      <button type="submit">Submit Request</button>
+    </form>
+  </article>
+</section>
+{% endblock %}

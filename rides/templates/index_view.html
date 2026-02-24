@@ -3,27 +3,71 @@
 {% block content %}
 <section class="search-panel">
   <p class="eyebrow">Ride Search</p>
-  <h2 class="panel-title">Find your best SparkRides match</h2>
-  <p class="panel-subtitle">Search by rider, origin, destination, or state abbreviation and discover carpools with aligned interests.</p>
+  <h2 class="panel-title">Find your best SparkRides carpool match</h2>
+  <p class="panel-subtitle">
+    Search by rider, origin, destination, city, or state. Layer in date and seat filters to narrow to ideal carpools.
+  </p>
+
   <form action="{% url 'rides:index' %}" method="get" class="search-form" onsubmit="return checkForm();">
-    <label for="{{ form.search.id_for_label }}">Search rides</label>
-    {{ form.search }}
+    <div class="form-row form-row-wide">
+      <label for="{{ form.search.id_for_label }}">Keywords</label>
+      {{ form.search }}
+    </div>
+
+    <div class="form-row">
+      <label for="{{ form.travel_date.id_for_label }}">Travel date</label>
+      {{ form.travel_date }}
+    </div>
+
+    <div class="form-row">
+      <label for="{{ form.minimum_seats.id_for_label }}">Minimum seats</label>
+      {{ form.minimum_seats }}
+    </div>
+
+    <div class="form-row checkbox-row">
+      <label for="{{ form.passengers_only.id_for_label }}">{{ form.passengers_only }} {{ form.passengers_only.label }}</label>
+    </div>
+
     <button type="submit">Search Rides</button>
   </form>
-  <div class="hint-row" aria-hidden="true">
-    <span class="hint-chip">Austin Dallas</span>
-    <span class="hint-chip">Seattle WA</span>
-    <span class="hint-chip">Spotify + Miami</span>
+
+  <div class="hint-row">
+    <button class="hint-chip" type="button" data-search-hint="Austin Dallas">Austin Dallas</button>
+    <button class="hint-chip" type="button" data-search-hint="Seattle WA">Seattle WA</button>
+    <button class="hint-chip" type="button" data-search-hint="San Jose CA">San Jose CA</button>
+    <button class="hint-chip" type="button" data-search-hint="Miami Orlando">Miami Orlando</button>
   </div>
 </section>
 
 <section class="results-panel">
   <div class="results-head">
-    <h3>Results</h3>
+    <h3>Search Results</h3>
+    {% if search_executed %}
+    <p class="results-meta">{{ match_count }} match{{ match_count|pluralize }} found</p>
+    {% endif %}
   </div>
-  {% if people is None %}
-    <p class="empty-state">Enter a name or city to search ride listings.</p>
+
+  {% if not search_executed %}
+    <p class="empty-state">Run a search to see available rides and compatibility options.</p>
   {% elif people %}
+    <div class="result-card-grid">
+      {% for person in people %}
+      <article class="result-card">
+        <div class="result-card-head">
+          <h4>{{ person.first_name }}</h4>
+          {% if person.taking_passengers %}
+          <span class="pill pill-yes">Open</span>
+          {% else %}
+          <span class="pill pill-no">Closed</span>
+          {% endif %}
+        </div>
+        <p><strong>Route:</strong> {{ person.origination }} to {{ person.destination_city }}, {{ person.destination_state }}</p>
+        <p><strong>Departure:</strong> {{ person.date }} at {{ person.time }}</p>
+        <p><strong>Seats:</strong> {{ person.seats_available }}</p>
+      </article>
+      {% endfor %}
+    </div>
+
     <div class="table-wrap">
       <table>
         <thead>
@@ -59,7 +103,7 @@
       </table>
     </div>
   {% else %}
-    <p class="empty-state">No rides matched your search.</p>
+    <p class="empty-state">No rides matched the current filters.</p>
   {% endif %}
 </section>
 {% endblock %}
