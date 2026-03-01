@@ -3,19 +3,19 @@
 {% block content %}
 <section class="page-intro">
   <p class="eyebrow">Account</p>
-  <h1 class="panel-title">Sign in or create your SparkRides account</h1>
+  <h1 class="panel-title">Spark a conversation</h1>
   <p class="panel-subtitle">
-    Manage carpool preferences, connect social platforms, and unlock better compatibility recommendations.
+    Build a profile that attracts the right people for friendship, business, dating, and beyond.
   </p>
 </section>
 
 <section class="split-panel auth-panel">
   <article class="split-card {% if active_panel == 'login' %}is-active-panel{% endif %}">
     <h3>Welcome Back</h3>
-    <p class="card-subtitle">Sign in to continue booking and managing rides.</p>
+    <p class="card-subtitle">Jump back in and keep your momentum going.</p>
 
     {% if login_success %}
-    <p class="notice-success">Sign-in details accepted. Authentication wiring can be connected next.</p>
+    <p class="notice-success">You are in. Your next great match is waiting.</p>
     {% endif %}
 
     <form method="post" class="stack-form">
@@ -38,10 +38,10 @@
 
   <article class="split-card {% if active_panel == 'register' %}is-active-panel{% endif %}">
     <h3>Create Account</h3>
-    <p class="card-subtitle">Set up your rider profile and start discovering social-first carpools.</p>
+    <p class="card-subtitle">Set your vibe and start meeting people with purpose.</p>
 
     {% if register_success %}
-    <p class="notice-success">Account details received. Connect this form to user creation when ready.</p>
+    <p class="notice-success">Account created. Now let SparkRides start matching your vibe.</p>
     {% endif %}
 
     <form method="post" class="stack-form">
@@ -73,16 +73,16 @@
 
 <section class="feature-grid">
   <article class="feature-card">
-    <h3>Profile Controls</h3>
-    <p>Set route defaults, accessibility needs, and ride comfort preferences in one place.</p>
+    <h3>Signal Your Intent</h3>
+    <p>Let people know if you are here for friends, networking, dating, or all of it.</p>
   </article>
   <article class="feature-card">
-    <h3>Connected Integrations</h3>
-    <p>Link optional social platforms to improve rider matchmaking quality.</p>
+    <h3>Richer Match Quality</h3>
+    <p>Connect social signals to improve chemistry before the pickup even starts.</p>
   </article>
   <article class="feature-card">
-    <h3>Faster Booking</h3>
-    <p>Save frequent trips and rider preferences for one-click ride discovery.</p>
+    <h3>Less Scrolling, More Meeting</h3>
+    <p>Save your preferences once, then spend your time building real connections.</p>
   </article>
 </section>
 {% endblock %}

@@ -5,13 +5,13 @@
   <p class="eyebrow">Support</p>
   <h1 class="panel-title">Frequently asked questions</h1>
   <p class="panel-subtitle">
-    Learn how SparkRides compatibility matching, rider preferences, safety, and credits work.
+    Learn how SparkRides helps you spark a conversation, safely match, and build real relationships on the move.
   </p>
 </section>
 
 <section class="split-panel">
   <article class="split-card faq-card">
-    <h3>Common Questions</h3>
+    <h3>What People Ask Most</h3>
     <div class="faq-list" data-faq-list>
       {% for item in faqs %}
       <details class="faq-item" {% if forloop.first %}open{% endif %}>
@@ -23,10 +23,10 @@
   </article>
 
   <article class="split-card">
-    <h3>Contact Support</h3>
+    <h3>Need A Hand?</h3>
 
     {% if support_sent %}
-    <p class="notice-success">Support request submitted. Connect this to your ticketing system when ready.</p>
+    <p class="notice-success">Request sent. Our support team will follow up shortly.</p>
     {% endif %}
 
     <form method="post" class="stack-form">

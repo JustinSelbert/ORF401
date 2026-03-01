@@ -3,15 +3,15 @@
 {% block content %}
 <section class="hero-panel">
   <div class="hero-content">
-    <p class="eyebrow">SparkRides Matchmaking</p>
-    <h1 class="hero-title">Ridesharing built for route fit and social compatibility.</h1>
+    <p class="eyebrow">Spark a conversation</p>
+    <h1 class="hero-title">Not just a ride. Your next connection.</h1>
     <p class="hero-copy">
-      SparkRides helps riders form better carpools by combining destination overlap with optional social signals from Spotify,
-      Instagram, and other linked platforms. It is the ride experience of Uber and Lyft with stronger carpool chemistry.
+      SparkRides helps you meet people while you move: a new friend, a business partner, a workout buddy, or a romantic spark.
+      We blend route overlap with shared interests so every ride has real social upside.
     </p>
     <div class="hero-cta-row">
-      <a class="cta-link" href="{% url 'rides:index' %}">Search Carpools</a>
-      <a class="secondary-link" href="{% url 'rides:map' %}">View Route Map</a>
+      <a class="cta-link" href="{% url 'rides:index' %}">Find Your People</a>
+      <a class="secondary-link" href="{% url 'rides:map' %}">See Live Routes</a>
     </div>
   </div>
 
@@ -33,47 +33,47 @@
 
 <section class="feature-grid">
   <article class="feature-card">
-    <h3>Route + Vibe Matching</h3>
-    <p>Find carpools where timing and destination align, then rank riders by compatibility signals and comfort preferences.</p>
+    <h3>Match The Vibe</h3>
+    <p>We pair route fit with personality fit, so you share the car with people you actually want to talk to.</p>
   </article>
   <article class="feature-card">
-    <h3>Linked Social Signals</h3>
-    <p>Connect Spotify, Instagram, and more to improve ride pairing confidence before pickup.</p>
+    <h3>Meet For Real Outcomes</h3>
+    <p>Turn commute time into connection time: make friends, grow your network, or explore something more.</p>
   </article>
   <article class="feature-card">
-    <h3>Safety + Transparency</h3>
-    <p>Preview rider profile context, linked account status, and seat availability before booking.</p>
+    <h3>Know Before You Ride</h3>
+    <p>Preview profiles, shared interests, and open seats before you commit, so every match feels intentional.</p>
   </article>
 </section>
 
 <section class="partner-section">
   <div class="section-heading">
     <p class="eyebrow">Connected Platforms</p>
-    <h2>Powered by optional social integrations.</h2>
+    <h2>Built for chemistry, backed by data.</h2>
     <p>
-      SparkRides enriches carpool matching with social context while keeping riders in control of what gets shared.
+      Link your favorite platforms to improve match quality without oversharing. You decide what fuels the algorithm.
     </p>
   </div>
   <div class="partner-grid">
     <article class="partner-card">
       <img src="/static/partners/spotify.svg" alt="Spotify partner logo">
       <h3>Spotify</h3>
-      <p>Tune compatibility around favorite artists, genres, and listening habits.</p>
+      <p>Start with shared playlists, artists, and audio taste.</p>
     </article>
     <article class="partner-card">
       <img src="/static/partners/instagram.svg" alt="Instagram partner logo">
       <h3>Instagram</h3>
-      <p>Use optional lifestyle tags to improve trip partner matching.</p>
+      <p>Use shared interests and lifestyle signals to improve fit.</p>
     </article>
     <article class="partner-card">
       <img src="/static/partners/facebook.svg" alt="Facebook partner logo">
       <h3>Facebook</h3>
-      <p>Enable demographic and community-aware recommendation logic.</p>
+      <p>Add social context to strengthen trust and compatibility.</p>
     </article>
     <article class="partner-card">
       <img src="/static/partners/youtube.svg" alt="YouTube partner logo">
       <h3>YouTube Music</h3>
-      <p>Supplement music profile matching for long-distance rides.</p>
+      <p>Improve long-ride match confidence with deeper taste signals.</p>
     </article>
   </div>
 </section>
@@ -84,46 +84,46 @@
   </div>
   <div class="map-copy">
     <p class="eyebrow">Live Corridor Insights</p>
-    <h2>Map intelligence for better shared rides.</h2>
+    <h2>See where conversations are already happening.</h2>
     <p>
-      Browse demand corridors, pickup hotspots, and seat supply before booking. Use the full map page to drill into route clusters.
+      Browse hotspots, seat supply, and active corridors to jump into the right social lane fast.
     </p>
     <ul class="map-list">
-      <li>Corridor-level demand signals for smarter departure timing</li>
-      <li>Pickup cluster analysis by neighborhood and city</li>
-      <li>Compatibility overlays tied to rider preferences</li>
+      <li>Find high-energy corridors with active riders</li>
+      <li>Spot pickup clusters by neighborhood and city</li>
+      <li>Layer compatibility signals before you book</li>
     </ul>
-    <a class="inline-link" href="{% url 'rides:map' %}">Open full map and corridor detail</a>
+    <a class="inline-link" href="{% url 'rides:map' %}">Open the live map</a>
   </div>
 </section>
 
 <section class="info-grid">
   <article class="info-card">
     <p class="info-step">01</p>
-    <h3>Create Your Profile</h3>
-    <p>Set social links, ride comfort defaults, and carpool priorities from your profile page.</p>
+    <h3>Set Your Intent</h3>
+    <p>Tell SparkRides what you want from rides: friends, networking, dating, or all three.</p>
   </article>
   <article class="info-card">
     <p class="info-step">02</p>
-    <h3>Search and Compare</h3>
-    <p>Filter by city, state, date, and available seats to find practical matches quickly.</p>
+    <h3>Find The Right Match</h3>
+    <p>Filter by route, time, and seats to quickly surface people you would actually enjoy meeting.</p>
   </article>
   <article class="info-card">
     <p class="info-step">03</p>
-    <h3>Book with Context</h3>
-    <p>Review match quality and availability before choosing your preferred carpool partner.</p>
+    <h3>Ride And Connect</h3>
+    <p>Book confidently with context, then turn dead commute time into real relationship momentum.</p>
   </article>
 </section>
 
 <section class="split-panel">
   <article class="split-card">
     <p class="eyebrow">Featured Matches</p>
-    <h3>Suggested carpools available now</h3>
+    <h3>People you could meet today</h3>
     <div class="mini-list">
       {% for match in featured_matches %}
       <div class="mini-item">
         <div>
-          <strong>{{ match.rider.first_name }}</strong>
+          <a class="rider-link" href="{% url 'rides:rider_profile' match.rider.id %}"><strong>{{ match.rider.first_name }}</strong></a>
           <p>{{ match.rider.origination }} to {{ match.rider.destination_city }}, {{ match.rider.destination_state }}</p>
         </div>
         <span class="pill pill-yes">{{ match.compatibility }}</span>
@@ -136,7 +136,7 @@
 
   <article class="split-card">
     <p class="eyebrow">Popular Destinations</p>
-    <h3>Where riders are headed most</h3>
+    <h3>Most active meeting corridors</h3>
     <div class="destination-list">
       {% for destination in popular_destinations %}
       <div class="destination-row">
@@ -147,19 +147,19 @@
       <p class="empty-state">No destination data yet.</p>
       {% endfor %}
     </div>
-    <a class="inline-link" href="{% url 'rides:index' %}">Search all rides</a>
+    <a class="inline-link" href="{% url 'rides:index' %}">Explore all rides</a>
   </article>
 </section>
 
 <section class="upcoming-section">
   <div class="section-heading">
     <p class="eyebrow">Upcoming Departures</p>
-    <h2>Next rides in your network.</h2>
+    <h2>Next opportunities to spark a conversation.</h2>
   </div>
   <div class="upcoming-grid">
     {% for ride in upcoming_preview %}
     <article class="upcoming-card">
-      <h3>{{ ride.first_name }}</h3>
+      <h3><a class="rider-link" href="{% url 'rides:rider_profile' ride.id %}">{{ ride.first_name }}</a></h3>
       <p>{{ ride.origination }} to {{ ride.destination_city }}, {{ ride.destination_state }}</p>
       <p>{{ ride.date }} at {{ ride.time }}</p>
       {% if ride.taking_passengers %}

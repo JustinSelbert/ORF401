@@ -10,7 +10,14 @@
       "date": "2026-03-17",
       "time": "08:30",
       "taking_passengers": true,
-      "seats_available": 2
+      "seats_available": 2,
+      "age": 23,
+      "relationship_status": "Single",
+      "occupation": "Software Engineer",
+      "interests": "Live music, Hiking, Coffee",
+      "personality_style": "Warm, curious, and easygoing",
+      "looking_for": "Friendship, Networking",
+      "bio": "Neda is a software engineer who enjoys live music and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -24,7 +31,14 @@
       "date": "2026-03-17",
       "time": "08:35",
       "taking_passengers": false,
-      "seats_available": 0
+      "seats_available": 0,
+      "age": 26,
+      "relationship_status": "In a relationship",
+      "occupation": "Product Manager",
+      "interests": "Startups, Podcasts, Strength training",
+      "personality_style": "Driven, witty, and social",
+      "looking_for": "Networking, Business partnerships",
+      "bio": "Percy is a product manager who enjoys startups and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -38,7 +52,14 @@
       "date": "2026-03-17",
       "time": "06:00",
       "taking_passengers": true,
-      "seats_available": 3
+      "seats_available": 3,
+      "age": 29,
+      "relationship_status": "Married",
+      "occupation": "Nurse",
+      "interests": "Travel, Food, Photography",
+      "personality_style": "Calm, thoughtful, and observant",
+      "looking_for": "Friendship, Romance",
+      "bio": "Cameron is a nurse who enjoys travel and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -52,7 +73,14 @@
       "date": "2026-03-17",
       "time": "08:45",
       "taking_passengers": true,
-      "seats_available": 1
+      "seats_available": 1,
+      "age": 32,
+      "relationship_status": "Open to dating",
+      "occupation": "Data Analyst",
+      "interests": "Running, AI, Chess",
+      "personality_style": "Outgoing, optimistic, and adventurous",
+      "looking_for": "Romance, Friendship",
+      "bio": "Deepu is a data analyst who enjoys running and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -66,7 +94,14 @@
       "date": "2026-03-17",
       "time": "08:20",
       "taking_passengers": true,
-      "seats_available": 2
+      "seats_available": 2,
+      "age": 35,
+      "relationship_status": "Prefer not to say",
+      "occupation": "UX Designer",
+      "interests": "Yoga, Wellness, Design",
+      "personality_style": "Analytical, kind, and conversational",
+      "looking_for": "Professional networking",
+      "bio": "Jia is a ux designer who enjoys yoga and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -80,7 +115,14 @@
       "date": "2026-03-17",
       "time": "09:00",
       "taking_passengers": false,
-      "seats_available": 0
+      "seats_available": 0,
+      "age": 38,
+      "relationship_status": "Single",
+      "occupation": "Marketing Strategist",
+      "interests": "Basketball, Streetwear, Entrepreneurship",
+      "personality_style": "Energetic, playful, and direct",
+      "looking_for": "Friendship, Activity partners",
+      "bio": "Kimberly is a marketing strategist who enjoys basketball and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -94,7 +136,14 @@
       "date": "2026-03-17",
       "time": "07:30",
       "taking_passengers": true,
-      "seats_available": 3
+      "seats_available": 3,
+      "age": 25,
+      "relationship_status": "In a relationship",
+      "occupation": "Founder",
+      "interests": "Books, Public speaking, Networking",
+      "personality_style": "Empathetic, grounded, and collaborative",
+      "looking_for": "Friendship, Networking",
+      "bio": "Andrew is a founder who enjoys books and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -108,7 +157,14 @@
       "date": "2026-03-17",
       "time": "08:40",
       "taking_passengers": false,
-      "seats_available": 0
+      "seats_available": 0,
+      "age": 28,
+      "relationship_status": "Married",
+      "occupation": "Financial Analyst",
+      "interests": "Cycling, Art museums, Brunch",
+      "personality_style": "Focused, funny, and low-drama",
+      "looking_for": "Networking, Business partnerships",
+      "bio": "Chris is a financial analyst who enjoys cycling and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -122,7 +178,14 @@
       "date": "2026-03-17",
       "time": "06:15",
       "taking_passengers": true,
-      "seats_available": 2
+      "seats_available": 2,
+      "age": 31,
+      "relationship_status": "Open to dating",
+      "occupation": "Teacher",
+      "interests": "Beach days, Indie films, Dogs",
+      "personality_style": "Warm, curious, and easygoing",
+      "looking_for": "Friendship, Romance",
+      "bio": "Iain is a teacher who enjoys beach days and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -136,7 +199,14 @@
       "date": "2026-03-17",
       "time": "09:10",
       "taking_passengers": false,
-      "seats_available": 0
+      "seats_available": 0,
+      "age": 34,
+      "relationship_status": "Prefer not to say",
+      "occupation": "Sales Director",
+      "interests": "Coding, Gaming, Sci-fi",
+      "personality_style": "Driven, witty, and social",
+      "looking_for": "Romance, Friendship",
+      "bio": "Ian is a sales director who enjoys coding and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -150,7 +220,14 @@
       "date": "2026-03-17",
       "time": "09:05",
       "taking_passengers": true,
-      "seats_available": 1
+      "seats_available": 1,
+      "age": 37,
+      "relationship_status": "Single",
+      "occupation": "Research Scientist",
+      "interests": "Meditation, Volunteering, Sustainability",
+      "personality_style": "Calm, thoughtful, and observant",
+      "looking_for": "Professional networking",
+      "bio": "Kari is a research scientist who enjoys meditation and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -164,7 +241,14 @@
       "date": "2026-03-17",
       "time": "07:20",
       "taking_passengers": true,
-      "seats_available": 2
+      "seats_available": 2,
+      "age": 24,
+      "relationship_status": "In a relationship",
+      "occupation": "Operations Manager",
+      "interests": "Climbing, Cooking, Weekend trips",
+      "personality_style": "Outgoing, optimistic, and adventurous",
+      "looking_for": "Friendship, Activity partners",
+      "bio": "Chris is a operations manager who enjoys climbing and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -178,7 +262,14 @@
       "date": "2026-03-17",
       "time": "08:25",
       "taking_passengers": false,
-      "seats_available": 0
+      "seats_available": 0,
+      "age": 27,
+      "relationship_status": "Married",
+      "occupation": "Software Engineer",
+      "interests": "Live music, Hiking, Coffee",
+      "personality_style": "Analytical, kind, and conversational",
+      "looking_for": "Friendship, Networking",
+      "bio": "Justin is a software engineer who enjoys live music and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -192,7 +283,14 @@
       "date": "2026-03-17",
       "time": "05:50",
       "taking_passengers": true,
-      "seats_available": 3
+      "seats_available": 3,
+      "age": 30,
+      "relationship_status": "Open to dating",
+      "occupation": "Product Manager",
+      "interests": "Startups, Podcasts, Strength training",
+      "personality_style": "Energetic, playful, and direct",
+      "looking_for": "Networking, Business partnerships",
+      "bio": "Xinzhou is a product manager who enjoys startups and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -206,7 +304,14 @@
       "date": "2026-03-17",
       "time": "07:10",
       "taking_passengers": true,
-      "seats_available": 2
+      "seats_available": 2,
+      "age": 33,
+      "relationship_status": "Prefer not to say",
+      "occupation": "Nurse",
+      "interests": "Travel, Food, Photography",
+      "personality_style": "Empathetic, grounded, and collaborative",
+      "looking_for": "Friendship, Romance",
+      "bio": "Mike is a nurse who enjoys travel and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -220,7 +325,14 @@
       "date": "2026-03-17",
       "time": "08:15",
       "taking_passengers": false,
-      "seats_available": 0
+      "seats_available": 0,
+      "age": 36,
+      "relationship_status": "Single",
+      "occupation": "Data Analyst",
+      "interests": "Running, AI, Chess",
+      "personality_style": "Focused, funny, and low-drama",
+      "looking_for": "Romance, Friendship",
+      "bio": "Bill is a data analyst who enjoys running and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -234,7 +346,14 @@
       "date": "2026-03-17",
       "time": "05:30",
       "taking_passengers": true,
-      "seats_available": 3
+      "seats_available": 3,
+      "age": 23,
+      "relationship_status": "In a relationship",
+      "occupation": "UX Designer",
+      "interests": "Yoga, Wellness, Design",
+      "personality_style": "Warm, curious, and easygoing",
+      "looking_for": "Professional networking",
+      "bio": "Harjot is a ux designer who enjoys yoga and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -248,7 +367,14 @@
       "date": "2026-03-17",
       "time": "08:50",
       "taking_passengers": true,
-      "seats_available": 1
+      "seats_available": 1,
+      "age": 26,
+      "relationship_status": "Married",
+      "occupation": "Marketing Strategist",
+      "interests": "Basketball, Streetwear, Entrepreneurship",
+      "personality_style": "Driven, witty, and social",
+      "looking_for": "Friendship, Activity partners",
+      "bio": "Kevin is a marketing strategist who enjoys basketball and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -262,7 +388,14 @@
       "date": "2026-03-17",
       "time": "07:40",
       "taking_passengers": true,
-      "seats_available": 2
+      "seats_available": 2,
+      "age": 29,
+      "relationship_status": "Open to dating",
+      "occupation": "Founder",
+      "interests": "Books, Public speaking, Networking",
+      "personality_style": "Calm, thoughtful, and observant",
+      "looking_for": "Friendship, Networking",
+      "bio": "Stephen is a founder who enjoys books and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -276,7 +409,14 @@
       "date": "2026-03-17",
       "time": "08:10",
       "taking_passengers": false,
-      "seats_available": 0
+      "seats_available": 0,
+      "age": 32,
+      "relationship_status": "Prefer not to say",
+      "occupation": "Financial Analyst",
+      "interests": "Cycling, Art museums, Brunch",
+      "personality_style": "Outgoing, optimistic, and adventurous",
+      "looking_for": "Networking, Business partnerships",
+      "bio": "Jim is a financial analyst who enjoys cycling and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -290,7 +430,14 @@
       "date": "2026-03-17",
       "time": "09:15",
       "taking_passengers": true,
-      "seats_available": 1
+      "seats_available": 1,
+      "age": 35,
+      "relationship_status": "Single",
+      "occupation": "Teacher",
+      "interests": "Beach days, Indie films, Dogs",
+      "personality_style": "Analytical, kind, and conversational",
+      "looking_for": "Friendship, Romance",
+      "bio": "John is a teacher who enjoys beach days and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -304,7 +451,14 @@
       "date": "2026-03-17",
       "time": "05:45",
       "taking_passengers": true,
-      "seats_available": 3
+      "seats_available": 3,
+      "age": 38,
+      "relationship_status": "In a relationship",
+      "occupation": "Sales Director",
+      "interests": "Coding, Gaming, Sci-fi",
+      "personality_style": "Energetic, playful, and direct",
+      "looking_for": "Romance, Friendship",
+      "bio": "Kangwook is a sales director who enjoys coding and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -318,7 +472,14 @@
       "date": "2026-03-17",
       "time": "08:55",
       "taking_passengers": false,
-      "seats_available": 0
+      "seats_available": 0,
+      "age": 25,
+      "relationship_status": "Married",
+      "occupation": "Research Scientist",
+      "interests": "Meditation, Volunteering, Sustainability",
+      "personality_style": "Empathetic, grounded, and collaborative",
+      "looking_for": "Professional networking",
+      "bio": "Ronnie is a research scientist who enjoys meditation and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -332,7 +493,14 @@
       "date": "2026-03-17",
       "time": "06:10",
       "taking_passengers": true,
-      "seats_available": 2
+      "seats_available": 2,
+      "age": 28,
+      "relationship_status": "Open to dating",
+      "occupation": "Operations Manager",
+      "interests": "Climbing, Cooking, Weekend trips",
+      "personality_style": "Focused, funny, and low-drama",
+      "looking_for": "Friendship, Activity partners",
+      "bio": "Le is a operations manager who enjoys climbing and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -346,7 +514,14 @@
       "date": "2026-03-17",
       "time": "08:05",
       "taking_passengers": true,
-      "seats_available": 2
+      "seats_available": 2,
+      "age": 31,
+      "relationship_status": "Prefer not to say",
+      "occupation": "Software Engineer",
+      "interests": "Live music, Hiking, Coffee",
+      "personality_style": "Warm, curious, and easygoing",
+      "looking_for": "Friendship, Networking",
+      "bio": "Bryan is a software engineer who enjoys live music and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -360,7 +535,14 @@
       "date": "2026-03-17",
       "time": "07:00",
       "taking_passengers": true,
-      "seats_available": 3
+      "seats_available": 3,
+      "age": 34,
+      "relationship_status": "Single",
+      "occupation": "Product Manager",
+      "interests": "Startups, Podcasts, Strength training",
+      "personality_style": "Driven, witty, and social",
+      "looking_for": "Networking, Business partnerships",
+      "bio": "Charlie is a product manager who enjoys startups and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -374,7 +556,14 @@
       "date": "2026-03-17",
       "time": "06:40",
       "taking_passengers": true,
-      "seats_available": 2
+      "seats_available": 2,
+      "age": 37,
+      "relationship_status": "In a relationship",
+      "occupation": "Nurse",
+      "interests": "Travel, Food, Photography",
+      "personality_style": "Calm, thoughtful, and observant",
+      "looking_for": "Friendship, Romance",
+      "bio": "Jennifer is a nurse who enjoys travel and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -388,7 +577,14 @@
       "date": "2026-03-17",
       "time": "07:50",
       "taking_passengers": false,
-      "seats_available": 0
+      "seats_available": 0,
+      "age": 24,
+      "relationship_status": "Married",
+      "occupation": "Data Analyst",
+      "interests": "Running, AI, Chess",
+      "personality_style": "Outgoing, optimistic, and adventurous",
+      "looking_for": "Romance, Friendship",
+      "bio": "Michael is a data analyst who enjoys running and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -402,7 +598,14 @@
       "date": "2026-03-17",
       "time": "09:20",
       "taking_passengers": true,
-      "seats_available": 1
+      "seats_available": 1,
+      "age": 27,
+      "relationship_status": "Open to dating",
+      "occupation": "UX Designer",
+      "interests": "Yoga, Wellness, Design",
+      "personality_style": "Analytical, kind, and conversational",
+      "looking_for": "Professional networking",
+      "bio": "Nikki is a ux designer who enjoys yoga and likes turning commute time into meaningful conversations."
     }
   },
   {
@@ -416,7 +619,14 @@
       "date": "2026-03-17",
       "time": "08:00",
       "taking_passengers": true,
-      "seats_available": 2
+      "seats_available": 2,
+      "age": 30,
+      "relationship_status": "Prefer not to say",
+      "occupation": "Marketing Strategist",
+      "interests": "Basketball, Streetwear, Entrepreneurship",
+      "personality_style": "Energetic, playful, and direct",
+      "looking_for": "Friendship, Activity partners",
+      "bio": "Christopher is a marketing strategist who enjoys basketball and likes turning commute time into meaningful conversations."
     }
   }
 ]

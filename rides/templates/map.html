@@ -18,9 +18,9 @@
 {% block content %}
 <section class="page-intro">
   <p class="eyebrow">Map Intelligence</p>
-  <h1 class="panel-title">Live map of all available rides</h1>
+  <h1 class="panel-title">Live map of where new conversations start</h1>
   <p class="panel-subtitle">
-    This map uses OpenStreetMap tiles through Leaflet and plots every available ride with origin and destination markers.
+    See every available ride in real time and choose corridors where connection energy is highest.
   </p>
 </section>
 
@@ -32,6 +32,7 @@
       <span><i class="legend-dot legend-destination"></i> Destination</span>
       <span><i class="legend-line"></i> Ride path</span>
     </div>
+    <p id="map-route-status" class="map-route-status">Preparing routes...</p>
   </div>
   <div class="map-copy">
     <p class="eyebrow">Network Snapshot</p>
@@ -43,34 +44,34 @@
       {% endif %}
     </p>
     <ul class="map-list">
-      <li>Click a marker or route line to view rider details.</li>
-      <li>Blue routes represent active available ride paths.</li>
-      <li>Use this to quickly identify carpools near your corridor.</li>
+      <li>Click a marker or route line to preview who you could meet.</li>
+      <li>Blue routes show where active social rides are happening now.</li>
+      <li>Use this to pick the corridor that fits your goals and vibe.</li>
     </ul>
   </div>
 </section>
 
 <section class="split-panel">
   <article class="split-card">
-    <h3>Mapped Available Rides</h3>
+    <h3>People You Can Meet Right Now</h3>
     <div class="mini-list">
       {% for ride in available_rides %}
       <div class="mini-item">
         <div>
-          <strong>{{ ride.first_name }}</strong>
+          <a class="rider-link" href="{% url 'rides:rider_profile' ride.id %}"><strong>{{ ride.first_name }}</strong></a>
           <p>{{ ride.origination }} to {{ ride.destination_city }}, {{ ride.destination_state }}</p>
           <p>{{ ride.date }} at {{ ride.time }}</p>
         </div>
         <span class="pill pill-yes">{{ ride.seats_available }} seats</span>
       </div>
       {% empty %}
-      <p class="empty-state">No available rides to display on the map.</p>
+      <p class="empty-state">No available rides right now. Check back soon for fresh connections.</p>
       {% endfor %}
     </div>
   </article>
 
   <article class="split-card">
-    <h3>Top Corridors</h3>
+    <h3>Top Conversation Corridors</h3>
     <div class="mini-list">
       {% for corridor in corridor_cards %}
       <div class="mini-item">
@@ -81,7 +82,7 @@
         <span class="pill {% if corridor.load == 'High demand' %}pill-yes{% endif %}">{{ corridor.load }}</span>
       </div>
       {% empty %}
-      <p class="empty-state">No corridor data available yet.</p>
+      <p class="empty-state">No corridor data yet.</p>
       {% endfor %}
     </div>
   </article>
@@ -89,7 +90,7 @@
 
 <section class="split-panel">
   <article class="split-card">
-    <h3>Pickup Hotspots</h3>
+    <h3>Connection Hotspots</h3>
     <div class="destination-list">
       {% for spot in pickup_hotspots %}
       <div class="destination-row">
@@ -100,15 +101,15 @@
       <p class="empty-state">No pickup activity found.</p>
       {% endfor %}
     </div>
-    <a class="inline-link" href="{% url 'rides:index' %}">Find rides on these corridors</a>
+    <a class="inline-link" href="{% url 'rides:index' %}">Find matches on these corridors</a>
   </article>
 
   <article class="split-card">
     <h3>How To Use This Map</h3>
     <div class="destination-list">
-      <div class="destination-row"><span>1. Open route details</span><strong>Click marker</strong></div>
-      <div class="destination-row"><span>2. Compare seat supply</span><strong>Check popups</strong></div>
-      <div class="destination-row"><span>3. Book your match</span><strong>Go to Find Ride</strong></div>
+      <div class="destination-row"><span>1. Preview people on route</span><strong>Click marker</strong></div>
+      <div class="destination-row"><span>2. Compare your options</span><strong>Check popups</strong></div>
+      <div class="destination-row"><span>3. Spark a conversation</span><strong>Go to Find Ride</strong></div>
     </div>
   </article>
 </section>

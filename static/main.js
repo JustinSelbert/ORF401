@@ -81,10 +81,23 @@ function readMapRides() {
 }
 
 function renderRidePopup(ride) {
+  var profileLink = "";
+  if (ride.rider_profile_url) {
+    profileLink =
+      "<br><a class='map-profile-link' href='" +
+      encodeURI(ride.rider_profile_url) +
+      "'>View full rider profile</a>";
+  }
+
   return [
     "<strong>",
     escapeHtml(ride.first_name),
     "</strong><br>",
+    escapeHtml(ride.occupation || "SparkRides rider"),
+    "<br>",
+    "Looking for: ",
+    escapeHtml(ride.looking_for || "Connection"),
+    "<br>",
     escapeHtml(ride.origination),
     " to ",
     escapeHtml(ride.destination_city),
@@ -98,10 +111,122 @@ function renderRidePopup(ride) {
     "<br>",
     "Open seats: ",
     escapeHtml(ride.seats_available),
+    profileLink,
   ].join("");
 }
 
-function initRideMap() {
+function setMapRouteStatus(message) {
+  var statusElement = document.getElementById("map-route-status");
+  if (statusElement) {
+    statusElement.textContent = message;
+  }
+}
+
+function buildRouteKey(origin, destination) {
+  return [
+    origin[0].toFixed(4),
+    origin[1].toFixed(4),
+    destination[0].toFixed(4),
+    destination[1].toFixed(4),
+  ].join("|");
+}
+
+function toFiniteNumber(value) {
+  var parsedValue = Number(value);
+  return Number.isFinite(parsedValue) ? parsedValue : null;
+}
+
+function toLatLngPair(rawLatitude, rawLongitude) {
+  var latitude = toFiniteNumber(rawLatitude);
+  var longitude = toFiniteNumber(rawLongitude);
+  if (latitude === null || longitude === null) {
+    return null;
+  }
+
+  if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+    return null;
+  }
+
+  return [latitude, longitude];
+}
+
+function normalizePathCoordinates(rawCoordinates) {
+  if (!Array.isArray(rawCoordinates)) {
+    return null;
+  }
+
+  var coordinates = rawCoordinates
+    .map(function (point) {
+      if (!Array.isArray(point) || point.length < 2) {
+        return null;
+      }
+
+      return toLatLngPair(point[0], point[1]);
+    })
+    .filter(function (point) {
+      return Array.isArray(point);
+    });
+
+  return coordinates.length > 1 ? coordinates : null;
+}
+
+async function fetchRoadRoute(origin, destination, routeCache) {
+  var key = buildRouteKey(origin, destination);
+  if (Object.prototype.hasOwnProperty.call(routeCache, key)) {
+    return routeCache[key];
+  }
+
+  var url =
+    "/api/road-route/?" +
+    "origin_lat=" +
+    encodeURIComponent(origin[0]) +
+    "&origin_lng=" +
+    encodeURIComponent(origin[1]) +
+    "&destination_lat=" +
+    encodeURIComponent(destination[0]) +
+    "&destination_lng=" +
+    encodeURIComponent(destination[1]);
+
+  try {
+    var response = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!response.ok) {
+      routeCache[key] = null;
+      return null;
+    }
+
+    var payload = await response.json();
+    var coordinates = normalizePathCoordinates(payload && payload.coordinates);
+    routeCache[key] = coordinates;
+    return coordinates;
+  } catch (error) {
+    routeCache[key] = null;
+    return null;
+  }
+}
+
+async function mapWithConcurrency(items, concurrency, worker) {
+  var results = new Array(items.length);
+  var currentIndex = 0;
+
+  async function runWorker() {
+    while (currentIndex < items.length) {
+      var itemIndex = currentIndex;
+      currentIndex += 1;
+      results[itemIndex] = await worker(items[itemIndex], itemIndex);
+    }
+  }
+
+  var workerCount = Math.max(1, Math.min(concurrency, items.length));
+  var workers = [];
+  for (var i = 0; i < workerCount; i += 1) {
+    workers.push(runWorker());
+  }
+
+  await Promise.all(workers);
+  return results;
+}
+
+async function initRideMap() {
   var mapElement = document.getElementById("rides-map");
   if (!mapElement || typeof window.L === "undefined") {
     return;
@@ -110,56 +235,110 @@ function initRideMap() {
   var rides = readMapRides();
   var map = window.L.map(mapElement, { scrollWheelZoom: true });
 
-  window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  window.L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
     maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; CARTO',
   }).addTo(map);
 
   if (!rides.length) {
     map.setView([39.8283, -98.5795], 4);
+    setMapRouteStatus("No rides available to route.");
     return;
   }
 
+  setMapRouteStatus("Computing road routes...");
+
+  var routeCache = {};
   var bounds = [];
+  var roadRouteCount = 0;
+  var fallbackRouteCount = 0;
+  var maxConcurrentRouteRequests = 4;
 
-  rides.forEach(function (ride) {
-    var origin = [ride.origin_lat, ride.origin_lng];
-    var destination = [ride.destination_lat, ride.destination_lng];
-    var popup = renderRidePopup(ride);
+  var routedRides = await mapWithConcurrency(
+    rides,
+    maxConcurrentRouteRequests,
+    async function (ride) {
+      var origin = toLatLngPair(ride.origin_lat, ride.origin_lng);
+      var destination = toLatLngPair(ride.destination_lat, ride.destination_lng);
+      if (!origin || !destination) {
+        fallbackRouteCount += 1;
+        return null;
+      }
 
-    window.L.polyline([origin, destination], {
-      color: "#2f6fff",
+      var roadCoordinates = await fetchRoadRoute(origin, destination, routeCache);
+      var hasRoadRoute = Array.isArray(roadCoordinates) && roadCoordinates.length > 1;
+
+      if (hasRoadRoute) {
+        roadRouteCount += 1;
+      } else {
+        fallbackRouteCount += 1;
+      }
+
+      return {
+        ride: ride,
+        origin: origin,
+        destination: destination,
+        path: hasRoadRoute ? roadCoordinates : [origin, destination],
+        hasRoadRoute: hasRoadRoute,
+      };
+    }
+  );
+
+  routedRides.forEach(function (entry) {
+    if (!entry) {
+      return;
+    }
+
+    var popup = renderRidePopup(entry.ride);
+
+    window.L.polyline(entry.path, {
+      color: "#ff6a00",
       weight: 3,
-      opacity: 0.75,
+      opacity: 0.78,
+      dashArray: entry.hasRoadRoute ? null : "6 6",
     })
       .addTo(map)
       .bindPopup(popup);
 
-    window.L.circleMarker(origin, {
+    window.L.circleMarker(entry.origin, {
       radius: 6,
-      color: "#0b3d2f",
+      color: "#2f1b0d",
       weight: 1,
-      fillColor: "#17b890",
+      fillColor: "#ff8a33",
       fillOpacity: 0.95,
     })
       .addTo(map)
       .bindPopup("<strong>Origin</strong><br>" + popup);
 
-    window.L.circleMarker(destination, {
+    window.L.circleMarker(entry.destination, {
       radius: 6,
-      color: "#730052",
+      color: "#26140a",
       weight: 1,
-      fillColor: "#ff00bf",
+      fillColor: "#ff6a00",
       fillOpacity: 0.95,
     })
       .addTo(map)
       .bindPopup("<strong>Destination</strong><br>" + popup);
 
-    bounds.push(origin);
-    bounds.push(destination);
+    bounds.push(entry.origin);
+    bounds.push(entry.destination);
   });
 
-  map.fitBounds(bounds, { padding: [24, 24] });
+  if (bounds.length) {
+    map.fitBounds(bounds, { padding: [24, 24] });
+  } else {
+    map.setView([39.8283, -98.5795], 4);
+  }
+
+  setMapRouteStatus(
+    "Road routes ready: " +
+      roadRouteCount +
+      " routed on roads, " +
+      fallbackRouteCount +
+      " fallback line" +
+      (fallbackRouteCount === 1 ? "" : "s") +
+      "."
+  );
 }
 
 document.addEventListener("DOMContentLoaded", function () {

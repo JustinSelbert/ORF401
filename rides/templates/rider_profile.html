@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="profile-hero">
+  <div>
+    <p class="eyebrow">Rider Profile</p>
+    <h1 class="panel-title">{{ rider.first_name }}{% if rider.age %}, {{ rider.age }}{% endif %}</h1>
+    <p class="panel-subtitle">
+      {% if rider.occupation %}{{ rider.occupation }}{% else %}SparkRides member{% endif %}
+      from {{ rider.origination }} heading to {{ rider.destination_city }}, {{ rider.destination_state }}.
+    </p>
+  </div>
+  <div class="profile-badges">
+    <span class="pill pill-yes">Match Score {{ compatibility_score }}</span>
+    {% if rider.relationship_status %}
+    <span class="pill">{{ rider.relationship_status }}</span>
+    {% endif %}
+    {% for intent in rider_intents %}
+    <span class="pill">{{ intent }}</span>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="split-panel">
+  <article class="split-card">
+    <h3>About {{ rider.first_name }}</h3>
+    {% if rider.bio %}
+    <p class="text-block">{{ rider.bio }}</p>
+    {% else %}
+    <p class="empty-state">This rider has not added a bio yet.</p>
+    {% endif %}
+
+    <div class="destination-list">
+      {% if rider.personality_style %}
+      <div class="destination-row">
+        <span>Personality</span>
+        <strong>{{ rider.personality_style }}</strong>
+      </div>
+      {% endif %}
+      {% if rider.occupation %}
+      <div class="destination-row">
+        <span>Occupation</span>
+        <strong>{{ rider.occupation }}</strong>
+      </div>
+      {% endif %}
+      <div class="destination-row">
+        <span>Current Route</span>
+        <strong>{{ rider.origination }} to {{ rider.destination_city }}</strong>
+      </div>
+    </div>
+  </article>
+
+  <article class="split-card">
+    <h3>Current Ride</h3>
+    <div class="mini-list">
+      <div class="mini-item">
+        <div>
+          <strong>{{ rider.date }} at {{ rider.time }}</strong>
+          <p>{{ rider.origination }} to {{ rider.destination_city }}, {{ rider.destination_state }}</p>
+        </div>
+        {% if rider.taking_passengers %}
+        <span class="pill pill-yes">{{ rider.seats_available }} seats open</span>
+        {% else %}
+        <span class="pill pill-no">Not taking passengers</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <a class="inline-link" href="{% url 'rides:index' %}">Back to ride search</a>
+      <a class="inline-link" href="{% url 'rides:map' %}">View on live map</a>
+    </div>
+  </article>
+</section>
+
+<section class="split-panel">
+  <article class="split-card">
+    <h3>Interests</h3>
+    {% if rider_interests %}
+    <div class="chip-list">
+      {% for interest in rider_interests %}
+      <span class="chip">{{ interest }}</span>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No interests shared yet.</p>
+    {% endif %}
+  </article>
+
+  <article class="split-card">
+    <h3>Other Riders On Similar Routes</h3>
+    <div class="mini-list">
+      {% for person in similar_riders %}
+      <div class="mini-item">
+        <div>
+          <a class="rider-link" href="{% url 'rides:rider_profile' person.id %}"><strong>{{ person.first_name }}</strong></a>
+          <p>{{ person.origination }} to {{ person.destination_city }}, {{ person.destination_state }}</p>
+        </div>
+        <span class="pill pill-yes">{{ person.seats_available }} seats</span>
+      </div>
+      {% empty %}
+      <p class="empty-state">No similar-route riders available right now.</p>
+      {% endfor %}
+    </div>
+  </article>
+</section>
+{% endblock %}

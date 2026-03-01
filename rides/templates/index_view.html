@@ -3,9 +3,9 @@
 {% block content %}
 <section class="search-panel">
   <p class="eyebrow">Ride Search</p>
-  <h2 class="panel-title">Find your best SparkRides carpool match</h2>
+  <h2 class="panel-title">Find a route. Meet someone worth knowing.</h2>
   <p class="panel-subtitle">
-    Search by rider, origin, destination, city, or state. Layer in date and seat filters to narrow to ideal carpools.
+    Search by route, rider, city, or state. Add filters and find the right people, not just the nearest car.
   </p>
 
   <form action="{% url 'rides:index' %}" method="get" class="search-form" onsubmit="return checkForm();">
@@ -28,7 +28,7 @@
       <label for="{{ form.passengers_only.id_for_label }}">{{ form.passengers_only }} {{ form.passengers_only.label }}</label>
     </div>
 
-    <button type="submit">Search Rides</button>
+    <button type="submit">Find Matches</button>
   </form>
 
   <div class="hint-row">
@@ -41,29 +41,33 @@
 
 <section class="results-panel">
   <div class="results-head">
-    <h3>Search Results</h3>
+    <h3>Best Available Matches</h3>
     {% if search_executed %}
     <p class="results-meta">{{ match_count }} match{{ match_count|pluralize }} found</p>
     {% endif %}
   </div>
 
   {% if not search_executed %}
-    <p class="empty-state">Run a search to see available rides and compatibility options.</p>
+    <p class="empty-state">Run a search to discover your next friend, collaborator, or spark.</p>
   {% elif people %}
     <div class="result-card-grid">
       {% for person in people %}
       <article class="result-card">
         <div class="result-card-head">
-          <h4>{{ person.first_name }}</h4>
+          <h4><a class="rider-link" href="{% url 'rides:rider_profile' person.id %}">{{ person.first_name }}</a></h4>
           {% if person.taking_passengers %}
           <span class="pill pill-yes">Open</span>
           {% else %}
           <span class="pill pill-no">Closed</span>
           {% endif %}
         </div>
+        <p><strong>Occupation:</strong> {{ person.occupation|default:"Not shared" }}</p>
+        <p><strong>Looking for:</strong> {{ person.looking_for|default:"Connection" }}</p>
+        <p><strong>Interests:</strong> {{ person.interests|default:"Not shared" }}</p>
         <p><strong>Route:</strong> {{ person.origination }} to {{ person.destination_city }}, {{ person.destination_state }}</p>
         <p><strong>Departure:</strong> {{ person.date }} at {{ person.time }}</p>
         <p><strong>Seats:</strong> {{ person.seats_available }}</p>
+        <p><a class="inline-link" href="{% url 'rides:ride_profile' person.id %}">View full profile</a></p>
       </article>
       {% endfor %}
     </div>
@@ -84,7 +88,7 @@
         <tbody>
           {% for person in people %}
           <tr>
-            <td><strong>{{ person.first_name }}</strong></td>
+            <td><a class="rider-link" href="{% url 'rides:rider_profile' person.id %}"><strong>{{ person.first_name }}</strong></a></td>
             <td>{{ person.origination }}</td>
             <td>{{ person.destination_city }}, {{ person.destination_state }}</td>
             <td>{{ person.date }}</td>
@@ -103,7 +107,7 @@
       </table>
     </div>
   {% else %}
-    <p class="empty-state">No rides matched the current filters.</p>
+    <p class="empty-state">No matches yet. Try broader filters and spark more possibilities.</p>
   {% endif %}
 </section>
 {% endblock %}

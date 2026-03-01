@@ -3,9 +3,9 @@
 {% block content %}
 <section class="profile-hero">
   <div>
-    <p class="eyebrow">Rider Profile</p>
+    <p class="eyebrow">Spark a conversation</p>
     <h1 class="panel-title">{{ profile_name }}</h1>
-    <p class="panel-subtitle">{{ profile_tier }} member in {{ profile_city }} with a {{ profile_score }} rider rating.</p>
+    <p class="panel-subtitle">{{ profile_tier }} member in {{ profile_city }} with a {{ profile_score }} rider rating and a people-first profile.</p>
   </div>
   <div class="profile-badges">
     <span class="pill pill-yes">Identity Verified</span>
@@ -35,12 +35,13 @@
   </article>
 
   <article class="split-card">
-    <h3>Upcoming Open Rides</h3>
+    <h3>Upcoming Chances To Connect</h3>
     <div class="mini-list">
       {% for ride in upcoming_rides %}
       <div class="mini-item">
         <div>
-          <strong>{{ ride.origination }} to {{ ride.destination_city }}</strong>
+          <a class="rider-link" href="{% url 'rides:rider_profile' ride.id %}"><strong>{{ ride.first_name }}</strong></a>
+          <p>{{ ride.origination }} to {{ ride.destination_city }}</p>
           <p>{{ ride.date }} at {{ ride.time }}</p>
         </div>
         <span class="pill pill-yes">{{ ride.seats_available }} seats</span>
@@ -54,11 +55,11 @@
 
 <section class="results-panel">
   <div class="results-head">
-    <h3>Match Preferences</h3>
+    <h3>Conversation Preferences</h3>
   </div>
 
   {% if preferences_saved %}
-  <p class="notice-success">Preferences captured. Connect this to persistence when you are ready.</p>
+  <p class="notice-success">Preferences saved. Future matches will better fit your vibe.</p>
   {% endif %}
 
   <form method="post" class="stack-form">

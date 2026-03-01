@@ -1,6 +1,13 @@
+import json
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+
 from django.db.models import Count, Q, Sum
+from django.http import JsonResponse
 from django.utils import timezone
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 
 from .forms import (
   CreateAccountForm,
@@ -31,6 +38,13 @@ CITY_COORDINATES = {
   ("miami", "fl"): (25.7617, -80.1918),
   ("orlando", "fl"): (28.5383, -81.3792),
   ("seattle", "wa"): (47.6062, -122.3321),
+  ("south san francisco", "ca"): (37.6547, -122.4077),
+  ("riverside", "ca"): (33.9806, -117.3755),
+  ("mountain view", "ca"): (37.3861, -122.0839),
+  ("santa rosa", "ca"): (38.4405, -122.7144),
+  ("merced", "ca"): (37.3022, -120.4829),
+  ("oakland", "ca"): (37.8044, -122.2711),
+  ("san carlos", "ca"): (37.5072, -122.2605),
 }
 
 STATE_CENTERS = {
@@ -40,9 +54,19 @@ STATE_CENTERS = {
   "WA": (47.7511, -120.7401),
 }
 
+OSRM_BASE_URL = "https://router.project-osrm.org/route/v1/driving/"
+ROUTE_COORDINATE_CACHE = {}
+
+
+def _split_csv(value):
+  return [item.strip() for item in (value or "").split(",") if item.strip()]
+
 
 def _compatibility_score(person):
-  score = 72 + ((len(person.first_name) * 3) + (person.seats_available * 4)) % 25
+  profile_bonus = min(12, len(_split_csv(person.interests)) * 2)
+  intent_bonus = 4 if person.looking_for else 0
+  seats_bonus = min(8, person.seats_available * 2)
+  score = min(98, 68 + profile_bonus + intent_bonus + seats_bonus)
   return f"{score}%"
 
 
@@ -57,6 +81,121 @@ def _resolve_coordinates(city_name, state_code):
     return STATE_CENTERS[state]
 
   return None
+
+
+def _build_route_key(origin, destination):
+  return (
+    f"{origin[0]:.5f}|{origin[1]:.5f}|"
+    f"{destination[0]:.5f}|{destination[1]:.5f}"
+  )
+
+
+def _decode_polyline(encoded_path, precision=5):
+  if not encoded_path:
+    return []
+
+  factor = 10 ** precision
+  latitude = 0
+  longitude = 0
+  index = 0
+  points = []
+
+  try:
+    while index < len(encoded_path):
+      result = 1
+      shift = 0
+      while True:
+        byte = ord(encoded_path[index]) - 63 - 1
+        index += 1
+        result += byte << shift
+        shift += 5
+        if byte < 0x1f:
+          break
+      latitude += ~(result >> 1) if (result & 1) else (result >> 1)
+
+      result = 1
+      shift = 0
+      while True:
+        byte = ord(encoded_path[index]) - 63 - 1
+        index += 1
+        result += byte << shift
+        shift += 5
+        if byte < 0x1f:
+          break
+      longitude += ~(result >> 1) if (result & 1) else (result >> 1)
+
+      points.append([latitude / factor, longitude / factor])
+  except (IndexError, TypeError):
+    return []
+
+  return points
+
+
+def _normalize_route_coordinates(raw_coordinates):
+  coordinates = []
+  for point in raw_coordinates:
+    if not isinstance(point, (list, tuple)) or len(point) < 2:
+      continue
+
+    try:
+      longitude = float(point[0])
+      latitude = float(point[1])
+    except (TypeError, ValueError):
+      continue
+
+    coordinates.append([latitude, longitude])
+
+  return coordinates
+
+
+def _extract_route_coordinates(route):
+  if not isinstance(route, dict):
+    return None
+
+  geometry = route.get("geometry")
+
+  if isinstance(geometry, dict):
+    coordinates = _normalize_route_coordinates(geometry.get("coordinates") or [])
+    return coordinates if len(coordinates) > 1 else None
+
+  if isinstance(geometry, str):
+    for precision in (5, 6):
+      decoded = _decode_polyline(geometry, precision=precision)
+      if len(decoded) > 1:
+        return decoded
+
+  return None
+
+
+def _fetch_road_route(origin, destination):
+  key = _build_route_key(origin, destination)
+  if key in ROUTE_COORDINATE_CACHE:
+    return ROUTE_COORDINATE_CACHE[key]
+
+  request_url = (
+    f"{OSRM_BASE_URL}{origin[1]},{origin[0]};{destination[1]},{destination[0]}?"
+    + urlencode({"overview": "full", "geometries": "geojson"})
+  )
+  request = Request(
+    request_url,
+    headers={"User-Agent": "HandyRides/1.0"},
+  )
+
+  try:
+    with urlopen(request, timeout=8) as response:
+      payload = json.loads(response.read().decode("utf-8"))
+  except (HTTPError, URLError, TimeoutError, ValueError, json.JSONDecodeError):
+    ROUTE_COORDINATE_CACHE[key] = None
+    return None
+
+  route = (payload.get("routes") or [None])[0] if isinstance(payload, dict) else None
+  coordinates = _extract_route_coordinates(route)
+  ROUTE_COORDINATE_CACHE[key] = coordinates
+  return coordinates
+
+
+def _valid_lat_lng(latitude, longitude):
+  return -90 <= latitude <= 90 and -180 <= longitude <= 180
 
 
 def home(request):
@@ -121,6 +260,11 @@ def index(request):
             Q(first_name__icontains=term)
             | Q(origination__icontains=term)
             | Q(destination_city__icontains=term)
+            | Q(occupation__icontains=term)
+            | Q(interests__icontains=term)
+            | Q(personality_style__icontains=term)
+            | Q(looking_for__icontains=term)
+            | Q(relationship_status__icontains=term)
           )
 
           # Treat 2-character tokens as potential state abbreviations.
@@ -222,22 +366,22 @@ def profile(request):
     {
       "name": "Spotify",
       "status": "Connected",
-      "detail": "47 shared artists with nearby riders",
+      "detail": "47 shared artists with people on your top routes",
     },
     {
       "name": "Instagram",
       "status": "Connected",
-      "detail": "Travel and wellness tags enabled for matching",
+      "detail": "Interest tags sharpen your friendship and dating matches",
     },
     {
       "name": "YouTube Music",
       "status": "Not linked",
-      "detail": "Connect to improve soundtrack compatibility",
+      "detail": "Connect to boost long-ride conversation fit",
     },
     {
       "name": "LinkedIn",
       "status": "Connected",
-      "detail": "Commute cadence boosts weekday pairing accuracy",
+      "detail": "Commute patterns improve professional networking matches",
     },
   ]
 
@@ -248,7 +392,7 @@ def profile(request):
     "profile.html",
     {
       "nav_page": "profile",
-      "profile_name": "Avery Carter",
+      "profile_name": "Justin Selbert",
       "profile_tier": "SparkRides Plus",
       "profile_city": "Austin, TX",
       "profile_score": "4.9",
@@ -288,12 +432,15 @@ def map_view(request):
       {
         "id": ride.id,
         "first_name": ride.first_name,
+        "occupation": ride.occupation,
+        "looking_for": ride.looking_for,
         "origination": ride.origination,
         "destination_city": ride.destination_city,
         "destination_state": ride.destination_state,
         "date": ride.date.isoformat(),
         "time": ride.time.strftime("%H:%M"),
         "seats_available": ride.seats_available,
+        "rider_profile_url": reverse("rides:rider_profile", args=[ride.id]),
         "origin_lat": origin_coordinates[0],
         "origin_lng": origin_coordinates[1],
         "destination_lat": destination_coordinates[0],
@@ -362,43 +509,96 @@ def map_view(request):
   )
 
 
+def road_route(request):
+  try:
+    origin_lat = float(request.GET.get("origin_lat", ""))
+    origin_lng = float(request.GET.get("origin_lng", ""))
+    destination_lat = float(request.GET.get("destination_lat", ""))
+    destination_lng = float(request.GET.get("destination_lng", ""))
+  except (TypeError, ValueError):
+    return JsonResponse({"coordinates": None, "error": "invalid_coordinates"}, status=400)
+
+  if not _valid_lat_lng(origin_lat, origin_lng) or not _valid_lat_lng(
+    destination_lat, destination_lng
+  ):
+    return JsonResponse({"coordinates": None, "error": "invalid_coordinates"}, status=400)
+
+  origin = [origin_lat, origin_lng]
+  destination = [destination_lat, destination_lng]
+
+  if origin == destination:
+    return JsonResponse({"coordinates": [origin, destination]})
+
+  coordinates = _fetch_road_route(origin, destination)
+  return JsonResponse({"coordinates": coordinates})
+
+
+def rider_profile(request, person_id):
+  rider = get_object_or_404(Person, pk=person_id)
+  rider_interests = _split_csv(rider.interests)
+  rider_intents = _split_csv(rider.looking_for)
+
+  similar_riders = (
+    Person.objects.filter(
+      destination_city=rider.destination_city,
+      destination_state=rider.destination_state,
+      taking_passengers=True,
+      seats_available__gt=0,
+    )
+    .exclude(pk=rider.pk)
+    .order_by("date", "time")[:4]
+  )
+
+  return render(
+    request,
+    "rider_profile.html",
+    {
+      "nav_page": "search",
+      "rider": rider,
+      "rider_interests": rider_interests,
+      "rider_intents": rider_intents,
+      "compatibility_score": _compatibility_score(rider),
+      "similar_riders": similar_riders,
+    },
+  )
+
+
 def faq(request):
   faqs = [
     {
       "question": "How does compatibility matching work?",
       "answer": (
-        "SparkRides combines route overlap with optional social signals from linked "
-        "platforms like Spotify and Instagram. Riders can tune preferences such as "
-        "conversation style, music focus, and comfort settings."
+        "SparkRides blends route overlap with optional social signals to rank people you "
+        "are more likely to click with. You can optimize for friendships, networking, "
+        "romance, and ride comfort."
       ),
     },
     {
       "question": "Do I need to connect social accounts?",
       "answer": (
-        "No. Social linking is optional. You can still use route-based matching only. "
-        "Linking profiles improves recommendations and helps identify better carpool "
-        "partners."
+        "No. You can use SparkRides with route-only matching. Connecting accounts simply "
+        "adds richer context so your suggestions feel more human and less random."
       ),
     },
     {
       "question": "Can I choose women-only or quiet rides?",
       "answer": (
-        "Yes. Profile preferences include women-only priority and quiet-ride matching. "
-        "Availability depends on active supply in your area."
+        "Yes. Set women-only priority, conversation style, and comfort preferences in your "
+        "profile. Availability depends on live supply in your area."
       ),
     },
     {
       "question": "What safety checks are in place?",
       "answer": (
-        "Every account goes through phone and email verification. Riders can report "
-        "issues from each trip card, and support reviews safety submissions quickly."
+        "Every account is phone and email verified. You can report issues from any trip "
+        "card, and safety submissions are prioritized by support."
       ),
     },
     {
       "question": "How do credits and refunds work?",
       "answer": (
         "Trip credits apply automatically at checkout. If a driver cancels before pickup, "
-        "you receive an automatic refund or a rebook credit."
+        "you get an automatic refund or instant rebook credit."
       ),
     },
   ]
