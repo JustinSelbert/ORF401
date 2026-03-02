@@ -29,7 +29,7 @@ DEBUG = _env_flag("DJANGO_DEBUG", default=True)
 
 default_allowed_hosts = "localhost,127.0.0.1"
 if not DEBUG:
-    default_allowed_hosts = f"{default_allowed_hosts},.herokuapp.com"
+    default_allowed_hosts = f"{default_allowed_hosts},.onrender.com,.herokuapp.com"
 ALLOWED_HOSTS = _env_csv("ALLOWED_HOSTS", default_allowed_hosts)
 
 CSRF_TRUSTED_ORIGINS = _env_csv("CSRF_TRUSTED_ORIGINS", "")

@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: handyrides
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    preDeployCommand: python manage.py migrate
+    startCommand: gunicorn HandyRides.wsgi:application --log-file -
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: SECURE_SSL_REDIRECT
+        value: "true"
+      - key: WEB_CONCURRENCY
+        value: "2"
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: handyrides-db
+          property: connectionString
+
+databases:
+  - name: handyrides-db
