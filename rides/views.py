@@ -6,11 +6,12 @@ from urllib.request import Request, urlopen
 from django.db.models import Count, Q, Sum
 from django.http import JsonResponse
 from django.utils import timezone
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .forms import (
   CreateAccountForm,
+  NewRideForm,
   ProfilePreferencesForm,
   RideForm,
   SignInForm,
@@ -233,11 +234,12 @@ def home(request):
 
 def index(request):
   form = RideForm(request.GET or None)
+  default_people = Person.objects.all().order_by("date", "time", "first_name")
   context = {
     "form": form,
-    "people": None,
+    "people": default_people,
     "search_executed": False,
-    "match_count": 0,
+    "match_count": default_people.count(),
     "nav_page": "search",
   }
 
@@ -293,6 +295,28 @@ def index(request):
       context["people"] = Person.objects.none()
 
   return render(request, "index_view.html", context)
+
+
+def create(request):
+  created = request.GET.get("created") == "1"
+
+  if request.method == "POST":
+    form = NewRideForm(request.POST)
+    if form.is_valid():
+      form.save()
+      return redirect(f"{reverse('rides:add_ride')}?created=1")
+  else:
+    form = NewRideForm()
+
+  return render(
+    request,
+    "add_ride.html",
+    {
+      "nav_page": "add_ride",
+      "form": form,
+      "created": created,
+    },
+  )
 
 
 def sign_in(request):

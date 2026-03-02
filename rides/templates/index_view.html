@@ -37,6 +37,10 @@
     <button class="hint-chip" type="button" data-search-hint="San Jose CA">San Jose CA</button>
     <button class="hint-chip" type="button" data-search-hint="Miami Orlando">Miami Orlando</button>
   </div>
+
+  <div class="panel-actions">
+    <a class="secondary-link" href="{% url 'rides:add_ride' %}">Add a New Ride</a>
+  </div>
 </section>
 
 <section class="results-panel">
@@ -44,12 +48,12 @@
     <h3>Best Available Matches</h3>
     {% if search_executed %}
     <p class="results-meta">{{ match_count }} match{{ match_count|pluralize }} found</p>
+    {% elif people %}
+    <p class="results-meta">{{ match_count }} public ride{{ match_count|pluralize }} listed</p>
     {% endif %}
   </div>
 
-  {% if not search_executed %}
-    <p class="empty-state">Run a search to discover your next friend, collaborator, or spark.</p>
-  {% elif people %}
+  {% if people %}
     <div class="result-card-grid">
       {% for person in people %}
       <article class="result-card">
@@ -106,8 +110,11 @@
         </tbody>
       </table>
     </div>
-  {% else %}
+  {% elif search_executed %}
     <p class="empty-state">No matches yet. Try broader filters and spark more possibilities.</p>
+  {% else %}
+    <p class="empty-state">No rides are listed yet. Add a ride to get the board started.</p>
   {% endif %}
 </section>
+
 {% endblock %}

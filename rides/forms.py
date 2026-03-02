@@ -1,5 +1,7 @@
 from django import forms
 
+from .models import Person
+
 
 INPUT_CLASS = "input-field"
 SELECT_CLASS = "input-field select-field"
@@ -38,6 +40,38 @@ class RideForm(forms.Form):
     initial=True,
     widget=forms.CheckboxInput(attrs={"class": "checkbox-field"}),
   )
+
+
+class NewRideForm(forms.ModelForm):
+  class Meta:
+    model = Person
+    fields = [
+      "first_name",
+      "origination",
+      "destination_city",
+      "destination_state",
+      "date",
+      "time",
+      "taking_passengers",
+      "seats_available",
+    ]
+    widgets = {
+      "first_name": forms.TextInput(attrs={"class": INPUT_CLASS}),
+      "origination": forms.TextInput(attrs={"class": INPUT_CLASS}),
+      "destination_city": forms.TextInput(attrs={"class": INPUT_CLASS}),
+      "destination_state": forms.TextInput(
+        attrs={"class": INPUT_CLASS, "maxlength": 2}
+      ),
+      "date": forms.DateInput(attrs={"type": "date", "class": INPUT_CLASS}),
+      "time": forms.TimeInput(attrs={"type": "time", "class": INPUT_CLASS}),
+      "taking_passengers": forms.CheckboxInput(attrs={"class": "checkbox-field"}),
+      "seats_available": forms.NumberInput(
+        attrs={"class": INPUT_CLASS, "min": 0, "max": 6}
+      ),
+    }
+
+  def clean_destination_state(self):
+    return self.cleaned_data["destination_state"].upper()
 
 
 class SignInForm(forms.Form):

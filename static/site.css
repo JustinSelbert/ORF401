@@ -72,17 +72,39 @@ a {
 .spark {
   position: absolute;
   left: var(--x);
-  top: -8%;
+  top: 106%;
   width: var(--size);
-  height: calc(var(--size) * 3.4);
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 210, 170, 0.95) 0%, rgba(255, 106, 0, 0.2) 100%);
-  box-shadow:
-    0 0 10px rgba(255, 106, 0, 0.4),
-    0 0 18px rgba(255, 106, 0, 0.2);
-  opacity: 0;
-  animation: sparkFall var(--duration) linear infinite;
-  animation-delay: var(--delay);
+  height: var(--size);
+  --sway: 18px;
+  --sway-duration: 3.6s;
+  border-radius: 50%;
+  background: rgba(255, 176, 108, 0.72);
+  opacity: 0.72;
+  animation:
+    sparkAscend var(--duration) linear infinite,
+    sparkSway var(--sway-duration) linear infinite;
+  animation-delay: var(--delay), var(--delay);
+  will-change: transform, opacity;
+}
+
+.spark:nth-child(2n) {
+  --sway: 24px;
+  --sway-duration: 3.1s;
+}
+
+.spark:nth-child(3n) {
+  --sway: 20px;
+  --sway-duration: 4s;
+}
+
+.spark:nth-child(4n) {
+  --sway: 28px;
+  --sway-duration: 3.4s;
+}
+
+.spark:nth-child(5n) {
+  --sway: 22px;
+  --sway-duration: 2.9s;
 }
 
 .page-shell {
@@ -703,6 +725,13 @@ button {
   gap: 0.42rem;
 }
 
+.panel-actions {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
 .hint-chip {
   display: inline-block;
   border-radius: 999px;
@@ -838,6 +867,22 @@ tbody tr:hover {
   font-size: 0.91rem;
 }
 
+.notice-error {
+  margin: 0.2rem 0 0.8rem;
+  padding: 0.68rem 0.78rem;
+  border-radius: 10px;
+  border: 1px solid #7f2c2c;
+  background: #2a1212;
+  color: #ffd0d0;
+  font-size: 0.91rem;
+}
+
+.field-error {
+  margin: 0.08rem 0 0;
+  font-size: 0.82rem;
+  color: #ffb5b5;
+}
+
 .split-panel {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -846,6 +891,15 @@ tbody tr:hover {
 
 .auth-panel {
   align-items: start;
+}
+
+.add-ride-layout {
+  align-items: start;
+}
+
+.add-ride-side {
+  position: sticky;
+  top: 1.2rem;
 }
 
 .split-card h3 {
@@ -1002,20 +1056,24 @@ tbody tr:hover {
   }
 }
 
-@keyframes sparkFall {
+@keyframes sparkAscend {
   0% {
-    opacity: 0;
-    transform: translate3d(0, -10vh, 0) rotate(10deg);
-  }
-  8% {
-    opacity: 0.45;
-  }
-  65% {
-    opacity: 0.22;
+    transform: translateY(0);
   }
   100% {
-    opacity: 0;
-    transform: translate3d(18px, 115vh, 0) rotate(16deg);
+    transform: translateY(-132vh);
+  }
+}
+
+@keyframes sparkSway {
+  0% {
+    margin-left: calc(var(--sway) * -1);
+  }
+  50% {
+    margin-left: var(--sway);
+  }
+  100% {
+    margin-left: calc(var(--sway) * -1);
   }
 }
 

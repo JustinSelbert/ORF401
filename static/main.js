@@ -58,6 +58,109 @@ function initFaqAccordion() {
   });
 }
 
+function initAddRideForm() {
+  var form = document.getElementById("add-ride-form");
+  if (!form) {
+    return;
+  }
+
+  var originField = form.querySelector("input[name='origination']");
+  var destinationCityField = form.querySelector("input[name='destination_city']");
+  var destinationStateField = form.querySelector("input[name='destination_state']");
+  var dateField = form.querySelector("input[name='date']");
+  var timeField = form.querySelector("input[name='time']");
+  var seatsField = form.querySelector("input[name='seats_available']");
+  var passengersField = form.querySelector("input[name='taking_passengers']");
+  var previewCopy = document.getElementById("ride-preview-copy");
+
+  if (dateField) {
+    var now = new Date();
+    var month = String(now.getMonth() + 1).padStart(2, "0");
+    var day = String(now.getDate()).padStart(2, "0");
+    dateField.min = [now.getFullYear(), month, day].join("-");
+  }
+
+  if (destinationStateField) {
+    destinationStateField.setAttribute("maxlength", "2");
+    destinationStateField.addEventListener("input", function () {
+      destinationStateField.value = destinationStateField.value
+        .replace(/[^a-zA-Z]/g, "")
+        .toUpperCase()
+        .slice(0, 2);
+      updatePreview();
+    });
+  }
+
+  if (seatsField) {
+    seatsField.addEventListener("input", function () {
+      var parsed = Number(seatsField.value);
+      if (Number.isNaN(parsed)) {
+        return;
+      }
+      if (parsed < 0) {
+        seatsField.value = "0";
+      }
+      if (parsed > 6) {
+        seatsField.value = "6";
+      }
+      updatePreview();
+    });
+  }
+
+  function updatePreview() {
+    if (!previewCopy) {
+      return;
+    }
+
+    var origin = originField && originField.value.trim();
+    var city = destinationCityField && destinationCityField.value.trim();
+    var state = destinationStateField && destinationStateField.value.trim();
+    var date = dateField && dateField.value.trim();
+    var time = timeField && timeField.value.trim();
+    var seats = seatsField && seatsField.value.trim();
+    var takingPassengers = !!(passengersField && passengersField.checked);
+
+    if (!origin && !city && !state) {
+      previewCopy.textContent = "No route yet.";
+      return;
+    }
+
+    var route = [origin || "Origin", "to", city || "Destination"];
+    if (state) {
+      route[route.length - 1] += ", " + state;
+    }
+
+    var schedule = [];
+    if (date) {
+      schedule.push(date);
+    }
+    if (time) {
+      schedule.push(time);
+    }
+
+    var seatCopy = seats ? seats + " seat" + (seats === "1" ? "" : "s") : "Seat count not set";
+    var passengerCopy = takingPassengers ? "taking passengers" : "driver only";
+
+    previewCopy.textContent =
+      route.join(" ") +
+      ". " +
+      (schedule.length ? "Departure: " + schedule.join(" ") + ". " : "") +
+      seatCopy +
+      ", " +
+      passengerCopy +
+      ".";
+  }
+
+  [originField, destinationCityField, dateField, timeField, passengersField].forEach(function (field) {
+    if (field) {
+      field.addEventListener("input", updatePreview);
+      field.addEventListener("change", updatePreview);
+    }
+  });
+
+  updatePreview();
+}
+
 function escapeHtml(value) {
   return String(value)
     .replace(/&/g, "&amp;")
@@ -344,5 +447,6 @@ async function initRideMap() {
 document.addEventListener("DOMContentLoaded", function () {
   initSearchHints();
   initFaqAccordion();
+  initAddRideForm();
   initRideMap();
 });

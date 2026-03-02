@@ -46,6 +46,7 @@
         <nav class="header-actions" aria-label="Primary">
           <a class="ghost-link {% if nav_page == 'home' %}is-active{% endif %}" href="{% url 'rides:home' %}">Home</a>
           <a class="ghost-link {% if nav_page == 'search' %}is-active{% endif %}" href="{% url 'rides:index' %}">Find Ride</a>
+          <a class="ghost-link {% if nav_page == 'add_ride' %}is-active{% endif %}" href="{% url 'rides:add_ride' %}">Add Ride</a>
           <a class="ghost-link {% if nav_page == 'map' %}is-active{% endif %}" href="{% url 'rides:map' %}">Map</a>
           <a class="ghost-link {% if nav_page == 'profile' %}is-active{% endif %}" href="{% url 'rides:profile' %}">Profile</a>
           <a class="ghost-link {% if nav_page == 'faq' %}is-active{% endif %}" href="{% url 'rides:faq' %}">FAQ</a>

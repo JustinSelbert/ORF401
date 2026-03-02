@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-intro">
+  <p class="eyebrow">Ride Registration</p>
+  <h1 class="panel-title">Post a ride to the public board</h1>
+  <p class="panel-subtitle">
+    Add your route, departure time, and open seats so people can find you from the ride search page.
+  </p>
+</section>
+
+<section class="split-panel add-ride-layout">
+  <article class="split-card is-active-panel">
+    <h3>Create Ride</h3>
+    <p class="card-subtitle">Fields marked by validation are required before publishing.</p>
+
+    {% if created %}
+    <p class="notice-success">Ride added. It is now visible in the public ride list.</p>
+    {% endif %}
+
+    {% if form.non_field_errors %}
+    <p class="notice-error">{{ form.non_field_errors }}</p>
+    {% endif %}
+
+    <form method="post" class="stack-form" id="add-ride-form" novalidate>
+      {% csrf_token %}
+      <div class="two-column-form">
+        <div class="form-row">
+          <label for="{{ form.first_name.id_for_label }}">Driver name</label>
+          {{ form.first_name }}
+          {% if form.first_name.errors %}<p class="field-error">{{ form.first_name.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-row">
+          <label for="{{ form.seats_available.id_for_label }}">Seats available</label>
+          {{ form.seats_available }}
+          {% if form.seats_available.errors %}<p class="field-error">{{ form.seats_available.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-row">
+          <label for="{{ form.origination.id_for_label }}">Origination</label>
+          {{ form.origination }}
+          {% if form.origination.errors %}<p class="field-error">{{ form.origination.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-row">
+          <label for="{{ form.destination_city.id_for_label }}">Destination city</label>
+          {{ form.destination_city }}
+          {% if form.destination_city.errors %}<p class="field-error">{{ form.destination_city.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-row">
+          <label for="{{ form.destination_state.id_for_label }}">Destination state</label>
+          {{ form.destination_state }}
+          {% if form.destination_state.errors %}<p class="field-error">{{ form.destination_state.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-row">
+          <label for="{{ form.date.id_for_label }}">Date</label>
+          {{ form.date }}
+          {% if form.date.errors %}<p class="field-error">{{ form.date.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-row">
+          <label for="{{ form.time.id_for_label }}">Time</label>
+          {{ form.time }}
+          {% if form.time.errors %}<p class="field-error">{{ form.time.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-row checkbox-row">
+          <label for="{{ form.taking_passengers.id_for_label }}">{{ form.taking_passengers }} Taking passengers</label>
+          {% if form.taking_passengers.errors %}<p class="field-error">{{ form.taking_passengers.errors.0 }}</p>{% endif %}
+        </div>
+      </div>
+      <button type="submit">Publish Ride</button>
+    </form>
+  </article>
+
+  <article class="split-card add-ride-side">
+    <h3>Preview</h3>
+    <p class="card-subtitle">Keep this summary clean so riders can scan quickly.</p>
+    <p class="text-block" id="ride-preview-copy">No route yet.</p>
+    <div class="chip-list">
+      <span class="chip">Public listing</span>
+      <span class="chip">Searchable instantly</span>
+      <span class="chip">Driver-controlled seats</span>
+    </div>
+    <div class="panel-actions">
+      <a class="secondary-link" href="{% url 'rides:index' %}">View Public Ride Search</a>
+    </div>
+  </article>
+</section>
+{% endblock %}

@@ -13,6 +13,8 @@ class PageRenderTests(TestCase):
     pages = [
       reverse("rides:home"),
       reverse("rides:index"),
+      reverse("rides:add_ride"),
+      reverse("rides:create"),
       reverse("rides:map"),
       reverse("rides:faq"),
       reverse("rides:sign_in"),
@@ -140,6 +142,30 @@ class RideSearchTests(TestCase):
     people = response.context["people"]
     self.assertEqual(people.count(), 1)
     self.assertEqual(people.first().first_name, "Alex")
+
+
+class RideCreationTests(TestCase):
+  def test_create_ride_from_form(self):
+    response = self.client.post(
+      reverse("rides:add_ride"),
+      {
+        "first_name": "Riley",
+        "origination": "Austin",
+        "destination_city": "Dallas",
+        "destination_state": "tx",
+        "date": "2026-03-03",
+        "time": "08:45",
+        "taking_passengers": "on",
+        "seats_available": "3",
+      },
+      follow=True,
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(Person.objects.count(), 1)
+    ride = Person.objects.first()
+    self.assertEqual(ride.first_name, "Riley")
+    self.assertEqual(ride.destination_state, "TX")
 
 
 class _MockResponse:
